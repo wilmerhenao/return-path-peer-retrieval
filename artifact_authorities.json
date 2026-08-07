@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "purpose": "Machine-readable index of the frozen files used by the active manuscript and artifact checks.",
+  "integrity_policy": "Timestamped run files are verified by the SHA256SUMS.txt file in the same directory. Root summaries are covered by the release-level ARTIFACT_MANIFEST.json.",
+  "authorities": [
+    {
+      "scope": "modern_window_metadata",
+      "path": "results/windows_v3/windows_summary.json"
+    },
+    {
+      "scope": "historical_window_metadata",
+      "path": "results/historical_windows_summary.json"
+    },
+    {
+      "scope": "full_return_census",
+      "path": "results/full_return_census/run_20260802T_full_return_authority_v2/full_return_census.json",
+      "checksum_manifest": "results/full_return_census/run_20260802T_full_return_authority_v2/SHA256SUMS.txt"
+    },
+    {
+      "scope": "historical_tfidf_selection",
+      "path": "results/acceptance_robustness/run_20260730T032543Z/01_tfidf_historical_tuning.json",
+      "checksum_manifest": "results/acceptance_robustness/run_20260730T032543Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "frozen_fusion_and_primary_feature_time_census",
+      "path": "results/acceptance_robustness/run_20260730T032543Z/02_blend_historical_tuning_modern_frozen.json",
+      "checksum_manifest": "results/acceptance_robustness/run_20260730T032543Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "robustness_and_dense_encoder_followup",
+      "path": "results/acceptance_followup/run_20260730T065913Z/adversarial_followup_census.json",
+      "checksum_manifest": "results/acceptance_followup/run_20260730T065913Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "historical_feature_time_census",
+      "path": "results/acceptance_full19_feature_time/run_20260730T032944Z/full19_feature_time_census.json",
+      "checksum_manifest": "results/acceptance_full19_feature_time/run_20260730T032944Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "target_date_sensitivity",
+      "path": "results/acceptance_target_date_uncertainty/run_20260731T014000Z/target_date_block_bootstrap.json",
+      "checksum_manifest": "results/acceptance_target_date_uncertainty/run_20260731T014000Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "memory_fusion_audit",
+      "path": "results/memory_fusion_audit/run_20260731T131959Z/memory_fusion_audit.json",
+      "checksum_manifest": "results/memory_fusion_audit/run_20260731T131959Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "strict_feature_time_application",
+      "path": "results/strict_feature_time_application/run_20260801T233929Z/strict_application_census.json",
+      "checksum_manifest": "results/strict_feature_time_application/run_20260801T233929Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "outlier_sensitivity",
+      "path": "results/outlier_sensitivity/run_20260801T234540Z/outlier_sensitivity_census.json",
+      "checksum_manifest": "results/outlier_sensitivity/run_20260801T234540Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "historical_nonlinear_fusion",
+      "path": "results/learned_fusion_followup/run_20260731T012556Z/learned_fusion_followup.json",
+      "checksum_manifest": "results/learned_fusion_followup/run_20260731T012556Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "gated_two_tower_historical_continuation",
+      "path": "experiments/multimodal_peer_encoder/artifacts/runs/run_20260802_v1/historical_selection.json"
+    },
+    {
+      "scope": "granite_token_audit",
+      "path": "results/granite_vintage_token_audit/run_20260731T132708Z/summary.json",
+      "checksum_manifest": "results/granite_vintage_token_audit/run_20260731T132708Z/SHA256SUMS.txt"
+    },
+    {
+      "scope": "granite_long_context_census",
+      "path": "results/granite_vintage_longctx_census/granite-longctx-20260730-034718-3825/granite_longctx_census.json",
+      "checksum_manifest": "results/granite_vintage_longctx_census/granite-longctx-20260730-034718-3825/SHA256SUMS.txt"
+    },
+    {
+      "scope": "same_window_text_diagnostic",
+      "path": "results/same_window_text_diagnostic/run_20260802T_same_window_authority_v2/same_window_text_diagnostic.json",
+      "checksum_manifest": "results/same_window_text_diagnostic/run_20260802T_same_window_authority_v2/SHA256SUMS.txt"
+    },
+    {
+      "scope": "pairwise_alignment_diagnostic",
+      "path": "results/pairwise_alignment/run_20260806T_pairwise_authority_v3/pairwise_alignment.json",
+      "checksum_manifest": "results/pairwise_alignment/run_20260806T_pairwise_authority_v3/SHA256SUMS.txt"
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "W1": {
+    "window": "W1",
+    "start": "2024-05-01",
+    "end": "2024-08-20",
+    "N": 1921,
+    "T": 77,
+    "lw_shrinkage": 0.7423874731083282,
+    "ts_features_shape": [
+      1921,
+      77
+    ],
+    "corr_target_shape": [
+      1921,
+      1921
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 77,
+    "median_observations": 77.0,
+    "max_observations": 77,
+    "corr_range": [
+      -0.23902943174965846,
+      0.25761252689153374
+    ]
+  },
+  "W2": {
+    "window": "W2",
+    "start": "2024-08-21",
+    "end": "2024-11-20",
+    "N": 1939,
+    "T": 65,
+    "lw_shrinkage": 0.7436355001898953,
+    "ts_features_shape": [
+      1939,
+      65
+    ],
+    "corr_target_shape": [
+      1939,
+      1939
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 65,
+    "median_observations": 65.0,
+    "max_observations": 65,
+    "corr_range": [
+      -0.23397927303106303,
+      0.2563644998101047
+    ]
+  },
+  "W3": {
+    "window": "W3",
+    "start": "2024-11-21",
+    "end": "2025-01-31",
+    "N": 1949,
+    "T": 47,
+    "lw_shrinkage": 0.7447758893936295,
+    "ts_features_shape": [
+      1949,
+      47
+    ],
+    "corr_target_shape": [
+      1949,
+      1949
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 47,
+    "median_observations": 47.0,
+    "max_observations": 47,
+    "corr_range": [
+      -0.24573115576137552,
+      0.2544842127168044
+    ]
+  },
+  "W4": {
+    "window": "W4",
+    "start": "2025-02-03",
+    "end": "2025-04-30",
+    "N": 1958,
+    "T": 61,
+    "lw_shrinkage": 0.7000248683789365,
+    "ts_features_shape": [
+      1958,
+      61
+    ],
+    "corr_target_shape": [
+      1958,
+      1958
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 61,
+    "median_observations": 61.0,
+    "max_observations": 61,
+    "corr_range": [
+      -0.27164940014369887,
+      0.29997513162106354
+    ]
+  },
+  "W5": {
+    "window": "W5",
+    "start": "2025-05-01",
+    "end": "2025-07-31",
+    "N": 1968,
+    "T": 63,
+    "lw_shrinkage": 0.7509258949186159,
+    "ts_features_shape": [
+      1968,
+      63
+    ],
+    "corr_target_shape": [
+      1968,
+      1968
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 63,
+    "median_observations": 63.0,
+    "max_observations": 63,
+    "corr_range": [
+      -0.23548926926216385,
+      0.24907410508138406
+    ]
+  },
+  "W6": {
+    "window": "W6",
+    "start": "2025-08-01",
+    "end": "2025-10-31",
+    "N": 1981,
+    "T": 65,
+    "lw_shrinkage": 0.7810946419030488,
+    "ts_features_shape": [
+      1981,
+      65
+    ],
+    "corr_target_shape": [
+      1981,
+      1981
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 65,
+    "median_observations": 65.0,
+    "max_observations": 65,
+    "corr_range": [
+      -0.2035698411668749,
+      0.21890535809695122
+    ]
+  },
+  "W7": {
+    "window": "W7",
+    "start": "2025-11-03",
+    "end": "2026-01-28",
+    "N": 1995,
+    "T": 59,
+    "lw_shrinkage": 0.7872304268166337,
+    "ts_features_shape": [
+      1995,
+      59
+    ],
+    "corr_target_shape": [
+      1995,
+      1995
+    ],
+    "return_convention": "daily simple adjusted-close excess return",
+    "factor_specification": "FF5 with intercept; dependent variable R_i - RF",
+    "missing_policy": "complete",
+    "min_observations": 59,
+    "median_observations": 59.0,
+    "max_observations": 59,
+    "corr_range": [
+      -0.20487240138908752,
+      0.2127695731833664
+    ]
+  }
+}

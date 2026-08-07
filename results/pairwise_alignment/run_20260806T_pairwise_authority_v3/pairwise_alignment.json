@@ -1,0 +1,99 @@
+{
+  "created_at_utc": "2026-08-07T04:09:01.803413+00:00",
+  "dense_text_encoders": {
+    "BGE": {
+      "cache_file": "results/vintage_all_encoders_v3/embedding_cache/W1_bge_c0bc3c577ef1ba41.npy",
+      "embedding_dimension": 768,
+      "same_window_spearman_rho": 0.042543842323506366,
+      "spearman_rho": 0.044379440608497585
+    },
+    "Granite-r2 (512 tok.)": {
+      "cache_file": "results/vintage_all_encoders_v3/embedding_cache/W1_granite_r2_f3bc40b4e05dc9dd.npy",
+      "embedding_dimension": 768,
+      "same_window_spearman_rho": 0.045956220487012665,
+      "spearman_rho": 0.04905269933385692
+    },
+    "MiniLM": {
+      "cache_file": "results/vintage_all_encoders_v3/embedding_cache/W1_minilm_33d5a9064bb324bb.npy",
+      "embedding_dimension": 384,
+      "same_window_spearman_rho": 0.028946537694330476,
+      "spearman_rho": 0.03171318434816135
+    },
+    "SEC-BERT": {
+      "cache_file": "results/vintage_all_encoders_v3/embedding_cache/W1_sec_bert_a12ac7836dd58089.npy",
+      "embedding_dimension": 768,
+      "same_window_spearman_rho": 0.030369191601693924,
+      "spearman_rho": 0.026654855613969342
+    }
+  },
+  "estimand": "Spearman rank correlation across all unordered W1 feature-time security pairs between each feature similarity and W1 or W2 Ledoit-Wolf FF5 residual correlation",
+  "input_sha256": {
+    "results/acceptance_robustness/run_20260730T032543Z/01_tfidf_historical_tuning.json": "2f730a48d3e995d675a4a4d4591222c0ba09ae85db1f5bb548cda54f52ff48ba",
+    "results/vintage_all_encoders_v3/embedding_cache/W1_bge_c0bc3c577ef1ba41.npy": "ed2d2fc013d0642d46bdffd0c841e9b23c550528a5b1fc3c407a1fa447a2a76c",
+    "results/vintage_all_encoders_v3/embedding_cache/W1_granite_r2_f3bc40b4e05dc9dd.npy": "0b9941f72cc6d47c9f98be50a504975f59b902fa7017f6f128da0ed2140ab6a4",
+    "results/vintage_all_encoders_v3/embedding_cache/W1_minilm_33d5a9064bb324bb.npy": "5603ee5ba4e5ef88400d4874bd74c264181d040807b6aa886e9d4f18366231ea",
+    "results/vintage_all_encoders_v3/embedding_cache/W1_sec_bert_a12ac7836dd58089.npy": "19c666a893c4e6de6fefdafe408db823f1eaf9f46d5ed0837f1b5483daa11caa",
+    "results/vintage_descriptions/W1_descriptions.parquet": "100261ff7c7c0e1a17e7c622c4f5584cbda21a7eedcc6d1cdfad4d7ee2574f11",
+    "results/windows_v3/W1/corr_target.npy": "5bdfc6f5b532ab1dc8332a664b58888eb86fc0381a440196f0c147a4c725adc3",
+    "results/windows_v3/W1/meta.json": "2943d0b2c4826c7284a77e87183c9b7e20512f2bc28d7e95b7da392c8cca857f",
+    "results/windows_v3/W1/ts_features.npy": "43eb7f392d949487ad5fd95058ea8608441d1510c944190d8f24e76529ad1c39",
+    "results/windows_v3/W1/universe.parquet": "640a8157a806f62640f280bc00e1222163051d1d3e1705993ba195714245546b",
+    "results/windows_v3/W2/corr_target.npy": "f773114f84cbb99cf1274b44a19c4fd9ec37468ecff02177a4625010962ea0fb",
+    "results/windows_v3/W2/meta.json": "ae66b2efbd90af8949c3c71df238de174d54706a160253d6e2cf0a63433050c2",
+    "results/windows_v3/W2/universe.parquet": "9382fed482fc1b91df305aa51f513ca56e41d2f4a370be6176eb55cbd978540c",
+    "scripts/metrics.py": "827e411d77466675d5837285f3c73a83d7a28fdd4d9739076dc8fd8b384b62c6",
+    "scripts/run_acceptance_robustness.py": "55ed41a9379df7a8a74f5dd25233c209de45eacac26c8d487a8d7020650d10c3",
+    "scripts/run_pairwise_alignment.py": "3e89da21cfef58a7c1eeb3144911e5313cf74e8727ebe8443774cc708541d891"
+  },
+  "n_securities": 1614,
+  "n_unordered_pairs": 1301691,
+  "protocol": {
+    "inference": "descriptive finite-panel coefficients only; no IID p-values or confidence intervals",
+    "pair_policy": "complete upper triangle; diagonal excluded",
+    "pair_subsampling_for_statistic": false,
+    "targets": "W1 same-window and W2 next-window Ledoit-Wolf FF5 residual correlation",
+    "universe": "return availability in W1 and W2 plus non-empty vintage Item 1 text filed strictly before W1"
+  },
+  "return_path": {
+    "same_window_spearman_rho": 0.9999999999998314,
+    "spearman_rho": 0.10291364423993028
+  },
+  "runtime_seconds": 4.215540457997122,
+  "schema_version": "pairwise-alignment-v3",
+  "software": {
+    "numpy": "2.4.2",
+    "polars": "1.39.3",
+    "python": "3.13.2",
+    "scipy": "1.17.1",
+    "sklearn": "1.8.0"
+  },
+  "tfidf": {
+    "configuration": {
+      "config_id": "b",
+      "kwargs": {
+        "max_features": 50000,
+        "min_df": 2,
+        "ngram_range": [
+          1,
+          2
+        ],
+        "stop_words": "english",
+        "strip_accents": "unicode",
+        "sublinear_tf": true
+      }
+    },
+    "same_window_spearman_rho": 0.03615627681325434,
+    "spearman_rho": 0.03545948940508347,
+    "vocabulary_size": 50000
+  },
+  "transition": "W1->W2",
+  "validations": {
+    "complete_pair_census": true,
+    "dense_cache_indexed_to_full_feature_universe": true,
+    "feature_time_universe": true,
+    "modern_target_used_for_configuration_selection": false,
+    "pair_count_identity": true,
+    "same_window_pair_count_identity": true,
+    "target_window_text_not_loaded": true
+  }
+}

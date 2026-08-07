@@ -1,0 +1,12 @@
+{
+  "artifact_sha256": {
+    "RUN_MANIFEST.json": "df2e974f4e9e4503f23c1265e414f41f42cdad8f5f0cba951a7cd384494cf3f3",
+    "RUN_REPORT.md": "cd297a3dfac6c5f19dd6d9b414055e71e9503a17c02881067c6c0f14f7297078",
+    "STOP": "2af183be253fd571e13dd3d310357f3a1ccc7b18502a83ed918e0b88a1e5355f",
+    "historical_results.json": "ce56edf3d9f8e8730b8e0b981f1888012c7bd4a4f479b6713d95caa6a553e11b"
+  },
+  "canonical_payload_sha256": "64f4fdd4c1cb456de0e947593fa8c741169e59716599071d1ce5d5f51b7f75e9",
+  "decision": "STOP",
+  "run_id": "run_20260802_v2",
+  "schema_version": "multimodal-peer-v2-final-receipt-v1"
+}

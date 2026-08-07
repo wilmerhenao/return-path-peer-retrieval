@@ -1,0 +1,16 @@
+# Compatibility union of the CPU and short-context model environments.
+# New installations should prefer environment/core.lock or
+# environment/models.lock. The Granite CUDA job has a separate environment.
+numpy==2.4.2
+polars==1.39.3
+scipy==1.17.1
+scikit-learn==1.8.0
+torch==2.11.0
+sentence-transformers==5.3.0
+transformers==5.5.0
+yfinance==1.2.0
+curl-cffi==0.13.0
+requests==2.32.5
+pandas==2.3.3
+pyarrow==23.0.1
+matplotlib==3.10.8

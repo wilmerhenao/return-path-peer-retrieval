@@ -1,0 +1,127 @@
+{
+  "checkpoint_provenance": {
+    "W1": {
+      "embedding_npy_sha256": "d362ae9289b7a26f76d1ad758d7aaf71fbc90a35726cefe2bb20b843f9c91949",
+      "fingerprint": "26af38caef4feec3e3ef47763caac2941cee322189a9aa6b71726822ea21cd72",
+      "s3_key": "icaif2026-granite-longctx-census-v1/checkpoints/granite-embedding-english-r2/26/W1-26af38caef4feec3e3ef47763caac2941cee322189a9aa6b71726822ea21cd72.npy",
+      "shape": [
+        1921,
+        768
+      ],
+      "source": "computed"
+    },
+    "W2": {
+      "embedding_npy_sha256": "c23f5230e01721191c27620114189b2db6a9a67cf92452faad00be32634b97ab",
+      "fingerprint": "59a01ba50b8328da0b820c34114e1cb680f7f2b182ef7184ef5c7f7e5606c200",
+      "s3_key": "icaif2026-granite-longctx-census-v1/checkpoints/granite-embedding-english-r2/59/W2-59a01ba50b8328da0b820c34114e1cb680f7f2b182ef7184ef5c7f7e5606c200.npy",
+      "shape": [
+        1939,
+        768
+      ],
+      "source": "computed"
+    },
+    "W3": {
+      "embedding_npy_sha256": "ee39619beaf45dc87b8e3cd34fdbda1a2548ecee5c305dade6fc8fed3f074bf3",
+      "fingerprint": "512ea463c39c7be6e51a5160b126bb8142a124d0a43ce165e2c97f04f9dc62b2",
+      "s3_key": "icaif2026-granite-longctx-census-v1/checkpoints/granite-embedding-english-r2/51/W3-512ea463c39c7be6e51a5160b126bb8142a124d0a43ce165e2c97f04f9dc62b2.npy",
+      "shape": [
+        1949,
+        768
+      ],
+      "source": "computed"
+    },
+    "W4": {
+      "embedding_npy_sha256": "f222bc24624fb756efb2fe42ab1ddda5ae5dee82ba7c7268d2a368d01d616b0b",
+      "fingerprint": "9ce7cc5671b781ecd1baa59925e85f2ed58c0166ee7f0bc7e89636554351d6c6",
+      "s3_key": "icaif2026-granite-longctx-census-v1/checkpoints/granite-embedding-english-r2/9c/W4-9ce7cc5671b781ecd1baa59925e85f2ed58c0166ee7f0bc7e89636554351d6c6.npy",
+      "shape": [
+        1958,
+        768
+      ],
+      "source": "computed"
+    },
+    "W5": {
+      "embedding_npy_sha256": "c8e9050eb459a8fb8500cd50f8a39853aa83dcfb98a59ef37dc6fcacbbabb47f",
+      "fingerprint": "d60f835550fdf78033ecec24b9cbc4f9f8bb70f34171200c6f27f61ce33b86c3",
+      "s3_key": "icaif2026-granite-longctx-census-v1/checkpoints/granite-embedding-english-r2/d6/W5-d60f835550fdf78033ecec24b9cbc4f9f8bb70f34171200c6f27f61ce33b86c3.npy",
+      "shape": [
+        1968,
+        768
+      ],
+      "source": "computed"
+    },
+    "W6": {
+      "embedding_npy_sha256": "30587811f6bb0a300dace0ad16935df2f226e5e162e0baaaa82a61df01e32e30",
+      "fingerprint": "0f008f1239b0b88e615a35e007ee7758d36a5391ef343d58797c5e126ae19218",
+      "s3_key": "icaif2026-granite-longctx-census-v1/checkpoints/granite-embedding-english-r2/0f/W6-0f008f1239b0b88e615a35e007ee7758d36a5391ef343d58797c5e126ae19218.npy",
+      "shape": [
+        1981,
+        768
+      ],
+      "source": "computed"
+    }
+  },
+  "created_at_utc": "2026-07-30T04:04:13.699282+00:00",
+  "input_sha256": {
+    "code/metrics.py": "827e411d77466675d5837285f3c73a83d7a28fdd4d9739076dc8fd8b384b62c6",
+    "code/train_vintage_granite_longctx.py": "0c8f3d494433823b677a63737b86c42a684946b033091a05b211e6cbbd01afab",
+    "models/granite-embedding-english-r2/.cache/huggingface/.gitignore": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+    "models/granite-embedding-english-r2/.cache/huggingface/CACHEDIR.TAG": "f6572428f6d5e1575e73a1502895a8731f10757dfbb634909c6e154b849af91d",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/.gitattributes.metadata": "28bc08cd125a239304cfd4566e53c31345647cdb6f004e8bc154c61ddbda0d6b",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/1_Pooling/config.json.metadata": "becfb029945b80beaffa9ad4c4d14c586ec20024c59968065afc9f5a9601aadf",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/README.md.metadata": "0e135598481efcbc2d044f0a37b3bce2cc7e6d297c1cbbbccd00de3f0248a461",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/config.json.metadata": "9740af299d713e9beeb07fd28664b48275d99e374b9d794d765ca0175e7b8217",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/model.safetensors.metadata": "8c89f0a667a209769492a86b3be8026a8a8c0057f8363559d8080417bec05ba4",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/modules.json.metadata": "415181ef8eb09c1eda0adb7cecf1eb6cc62f0c736e3f5c67910e4e792e5d837d",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/pytorch_model.bin.metadata": "0d56f00eaece845cc564a9b0b14b8a9145383f532b64e732464165d3ab64f507",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/sentence_bert_config.json.metadata": "99b271ac621b0962bfd59fbbb633677c06c58773b1299c445ef7d3746ca19d8e",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/special_tokens_map.json.metadata": "a9a7984b4c3d4e7c49be160e2ffc1b510529d855cb95a7d50573c32f868b7d12",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/tokenizer.json.metadata": "e1fdec6838be368af85c9220ce56935488e03487c4bf2d1f22d989a7e582f29b",
+    "models/granite-embedding-english-r2/.cache/huggingface/download/tokenizer_config.json.metadata": "7cb68e36b25aaa538a2c74f6e7d10b2726c6a4453006a71a1348daef76a8c54c",
+    "models/granite-embedding-english-r2/1_Pooling/config.json": "d81961da36b56f4a1abfbf59a2469e1c49efa04b94a876908c48780894b0b307",
+    "models/granite-embedding-english-r2/config.json": "bc4ad4e8cd50c0069292863117823f665da70bbbdea40fd4ea77d80609ade241",
+    "models/granite-embedding-english-r2/model.safetensors": "23bd9625b32680f180703408ed9d8d7b3a9c1efe4c950111e3ae9d9695b21b29",
+    "models/granite-embedding-english-r2/modules.json": "0580fad756940809b1bc064ce1e7c1275c8b0dd80869562fe0abeb6f7059cb97",
+    "models/granite-embedding-english-r2/sentence_bert_config.json": "23aa234ef6021d513cdf56947c07aaa6977000d85dcd1fd423f650b3382a39ca",
+    "models/granite-embedding-english-r2/special_tokens_map.json": "ea97ecdbcc73713039d8d64dbb05e3689495c96657fbd9a18f5bed381be81049",
+    "models/granite-embedding-english-r2/tokenizer.json": "6c8aaa9a542084f2457eab775d4eeb51f92a70c0fd9de28d5edb0ddec3c08d30",
+    "models/granite-embedding-english-r2/tokenizer_config.json": "c16f1b07f93d05be753ec0acf8cb511d895a8bdb09669f6b156df81e3f96c2eb",
+    "vintage/W1_descriptions.parquet": "100261ff7c7c0e1a17e7c622c4f5584cbda21a7eedcc6d1cdfad4d7ee2574f11",
+    "vintage/W2_descriptions.parquet": "ee17b7ac31f097fe1e08bebbe3f17f91d06ed23f659c1ac0f7bc0aa9d3c27eac",
+    "vintage/W3_descriptions.parquet": "0e868c70a2620f4482e99514f7828a176c5efc8cc4ff7092d1fe7ccfa2e4bcc8",
+    "vintage/W4_descriptions.parquet": "bcdb52210f6729066e472a915c02218265b6faf30a8d2796bbf5f33d8599de3c",
+    "vintage/W5_descriptions.parquet": "2bb90924fc9fc2b932e3d8dbb63a11aea845fd2c7d771e5a0af6e8599f548043",
+    "vintage/W6_descriptions.parquet": "56a6bb893f78355a1c7a1186d0397ae60ccb747a69725fd27ece28b7cc304378",
+    "vintage/W7_descriptions.parquet": "b8732f89dbf1f03a49e9e8296e51924d1ca96240f4e36db04a4a2a5bd291df4d",
+    "windows/W1/ts_features.npy": "43eb7f392d949487ad5fd95058ea8608441d1510c944190d8f24e76529ad1c39",
+    "windows/W1/universe.parquet": "640a8157a806f62640f280bc00e1222163051d1d3e1705993ba195714245546b",
+    "windows/W2/corr_target.npy": "f773114f84cbb99cf1274b44a19c4fd9ec37468ecff02177a4625010962ea0fb",
+    "windows/W2/ts_features.npy": "ea37b069df8aaf7e3323d14d1f6fbfcb5f78eb8c754276223fae7b9397b0f4d1",
+    "windows/W2/universe.parquet": "9382fed482fc1b91df305aa51f513ca56e41d2f4a370be6176eb55cbd978540c",
+    "windows/W3/corr_target.npy": "57ed5856e6d2b47a5787117e32bc4fddaa3dbda890ebdc695051fdf6f733e234",
+    "windows/W3/ts_features.npy": "d1af42dcc9b49f053bd9b5df0304dc5653c6508fa4e5016228d654221ca12f66",
+    "windows/W3/universe.parquet": "9a95be729cb1942b0196d9ad11e9a18efe197e4adc530a4b90a869861550adb9",
+    "windows/W4/corr_target.npy": "5128526937642479ee1d638e57e4f7c4d04f89ea3b0ae96c78c3bba87fb3eadd",
+    "windows/W4/ts_features.npy": "0639da124693d3e35e78022b23d5e1a39470231520f1dce8228516aaa45d746b",
+    "windows/W4/universe.parquet": "991fe26d2a518beaa31164a14764d3558e805fa193b80dea6ae0644632b9261d",
+    "windows/W5/corr_target.npy": "df0ae5d68c148ebaa87fbe3c7ccefdcd252a482863da6051f811d87d5133c12e",
+    "windows/W5/ts_features.npy": "eebe5950a01159adffd13b2640972688e47407c687054fdb10d92921d17d910e",
+    "windows/W5/universe.parquet": "630d7c0d502993a5da774a31431414c163086a75b7558948764c1ffd893e6209",
+    "windows/W6/corr_target.npy": "f6854b6aa8106d7d787dc4393af35a5eec94b6ce8e0ee3dca251b4fb1451584d",
+    "windows/W6/ts_features.npy": "277ecb3038b6c3ffd4f1b4a2c84ef003d98142477a86ceb629e183cef5ebb552",
+    "windows/W6/universe.parquet": "c08172355eb73619da25459d58b870ddc01fbd6dd5f0846ce05c19082e2e9217",
+    "windows/W7/corr_target.npy": "9b7ca0e0beaa536c259be86946fcf99b8add50cb47295cde0bb1a6bbb96a31bd",
+    "windows/W7/universe.parquet": "29672304bcdc80ed3631faf2ada70de9886d4baf621f68e4dc59d2320daa9f69"
+  },
+  "model_tree_sha256": "198d7df8b72a9fd77f9823e5e278f60df77c4577c08dd54e6df9888ade0c6d99",
+  "notes": "No account identifiers, bucket name, role ARN, or workstation paths are recorded in this artifact.",
+  "output_sha256": {
+    "granite_longctx_census.json": "937b69ef450a5c66dc3bcf109d2675544c3819ff7b2e804a96aeef7080e3601e",
+    "per_query_ndcg.csv": "9d228748abeb8a76c10dbd17b1c7f558991d130339a65793893186b005bebd76",
+    "per_transition.csv": "aed093ee04e8c7e0330987ed2cfd21d63a0ef41172b26edd63a7fe16dd6480f8",
+    "token_length_stats.csv": "89edf617f863ab9dcb3ce2efa42a5d8ff465135a2118c338df3bbd31b8d8ce39"
+  },
+  "run_id": "granite-longctx-20260730-034718-3825",
+  "schema_version": 1,
+  "training_job_name": "granite-longctx-20260730-034718-3825"
+}

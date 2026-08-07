@@ -1,0 +1,2 @@
+b0028143772464ea8be9516aa015cd225c0c654129d5ddaca1de56075ea6ed95  artifact_manifest.json
+dcbca72a3fd038ba4185fd5865a7628955d80730ce32319eb36edf63afc38986  same_window_text_diagnostic.json

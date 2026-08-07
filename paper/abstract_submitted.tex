@@ -1,0 +1,29 @@
+We study quarterly behavioral equity-peer retrieval.  Given a focal company,
+we rank five firms expected to co-move with it during the following quarter.
+Co-movement is measured after removing Fama--French five-factor (FF5) exposures.
+We test whether annual Form~10-K Item~1 business text available before ranking
+adds information beyond recent return co-movement, and whether any gain changes
+with additional return history.  Our training-free baseline uses the standardized
+residual-return time series itself as each security's embedding.  Pairwise cosine
+similarity over shared dates exactly equals sample residual correlation.
+
+Six walk-forward tests use one quarter to rank firms and the next to evaluate them,
+with 1,614--1,631 securities per test.  The return path attains mean normalized
+discounted cumulative gain at five (NDCG@5) of $0.336$, compared with $0.300$
+for term-frequency--inverse-document-frequency (TF-IDF) and $0.279$ for the
+dense Granite-r2 text encoder.  Filing similarity and residual co-movement are
+nearly unrelated at the pairwise level: across 1,301,691 pairs, four dense
+filing encoders have Spearman correlations of only $0.029$--$0.046$ in the same
+quarter and $0.027$--$0.049$ in the next.  Even so, an
+80/20 combination of return- and text-based ranks, fixed after selection on
+twelve earlier tests, reaches $0.373$ and
+improves on the return path in all six.  With four quarters of return history, text no longer improves the
+ranking.  Across 19
+transitions spanning 2020--2026, the return path leads TF-IDF in 18.
+
+For the availability audit, each five-name list is fixed before following-quarter
+returns are known; missing candidates are not replaced.  Of cases with the
+required inputs at ranking time, 99.2--99.6\% remain evaluable.  In this
+setting, filing text offers limited help in generating candidates.  The
+experiment does not test valuation-peer selection, hedge construction, trading,
+or analyst outcomes, and it still requires recent return history.

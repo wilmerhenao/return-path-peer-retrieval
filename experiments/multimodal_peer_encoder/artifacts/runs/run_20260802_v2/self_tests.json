@@ -1,0 +1,28 @@
+{
+  "canonical_payload_sha256": "cce7f036eb62c11df6e522c906898c4866b62647b7ba545c8fff6226418673f3",
+  "log_sha256": "25931df0ab44c509c884f13ee73ea4671fa509cb716c9f59455587d9b88b2781",
+  "schema_version": "multimodal-peer-v2-self-tests-v1",
+  "status": "COMPLETE",
+  "tests": [
+    {
+      "detail": "feature_orders=37740; aligned_fixture_orders=800; pre_gate_ndcg_checks=24; no_H8_H13_access",
+      "name": "S1",
+      "status": "PASS"
+    },
+    {
+      "detail": "synthetic head learnability suite, including second-step H-A gradient",
+      "name": "S2",
+      "status": "PASS"
+    },
+    {
+      "detail": "modern subtree request rejected before filesystem open",
+      "name": "S3",
+      "status": "PASS"
+    },
+    {
+      "detail": "generator decimal-literal grep=0; artifact substitution suite=PASS",
+      "name": "S4",
+      "status": "PASS"
+    }
+  ]
+}

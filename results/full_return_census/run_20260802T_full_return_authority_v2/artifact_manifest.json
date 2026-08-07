@@ -1,0 +1,12 @@
+{
+  "artifact_sha256": {
+    "full_return_census.json": "84aeb913028f502d74fc4bdc54d8c986cd1e835a157521cec5185cb2b61e0ca8",
+    "per_transition.csv": "953087f8047c62d3bffba93a26b9219087cc28081d7222e13d2ae63ea457ea6a"
+  },
+  "run_id": "run_20260802T_full_return_authority_v2",
+  "schema_version": "full-return-census-v1",
+  "source_sha256": {
+    "scripts/metrics.py": "827e411d77466675d5837285f3c73a83d7a28fdd4d9739076dc8fd8b384b62c6",
+    "scripts/run_full_return_census.py": "9f8675d92a7451dbc566b07a88c40d17a645a342f5919bb09df01cdfccb5aa6a"
+  }
+}

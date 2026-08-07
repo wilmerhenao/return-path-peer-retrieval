@@ -1,0 +1,61 @@
+{
+  "figure_design": {
+    "cross_panel_comparability": "none asserted; method comparisons are within panel only",
+    "error_bars": false,
+    "metric": "census NDCG@5",
+    "panel_a_n": [
+      1614,
+      1614,
+      1617,
+      1617,
+      1631,
+      1630
+    ],
+    "panel_a_universe": "returns in feature and target windows plus non-empty vintage 10-K Item 1 text at feature time",
+    "panel_b_macro_means": [
+      0.33552751735901515,
+      0.3909599383793003,
+      0.41365563671809463,
+      0.4301489003099585
+    ],
+    "panel_b_memory_windows": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "panel_b_n": [
+      1556,
+      1571,
+      1583,
+      1612,
+      1628,
+      1628
+    ],
+    "panel_b_universe": "identical M=1,2,3,4 subset with four consecutive return windows, target returns, and feature-time vintage text",
+    "transitions": [
+      "W1->W2",
+      "W2->W3",
+      "W3->W4",
+      "W4->W5",
+      "W5->W6",
+      "W6->W7"
+    ]
+  },
+  "inputs": {
+    "results/acceptance_followup/run_20260730T065913Z/adversarial_followup_census.json": "c06a8316ca436050a6aca4a1856feefce29afa954eae727bde6a07f5e0e84943",
+    "results/acceptance_followup/run_20260730T065913Z/artifact_manifest.json": "0b8e3af723b599f6150c852c732f89739585dc47c0c0db4581a72c84f1d2ff1d",
+    "results/acceptance_robustness/run_20260730T032543Z/02_blend_historical_tuning_modern_frozen.json": "32f43b42592758071bfd7b57411ec1f0f0f481290be88b9432afbff8ce3eaf64",
+    "results/acceptance_robustness/run_20260730T032543Z/artifact_manifest.json": "64ce62c36ef46d970a8fb51e4727b61614c0367584b19316ca1a4b44b1d7eb74"
+  },
+  "outputs": {
+    "paper/figures/fig_acceptance_robustness.pdf": "42ffa4f2d4766556b94a54fa32c4f5fa6973cf787569fcc49e5e691ac9c773ce",
+    "paper/figures/fig_acceptance_robustness.png": "0075f000ab741ebdc18622047dd642452133ef706c724ed14fc95946ed93a64a"
+  },
+  "run_ids": [
+    "run_20260730T032543Z",
+    "run_20260730T065913Z"
+  ],
+  "schema_version": "acceptance-robustness-figure-v1",
+  "script": "scripts/gen_acceptance_robustness_figure.py"
+}

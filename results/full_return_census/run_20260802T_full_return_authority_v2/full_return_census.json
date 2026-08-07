@@ -1,0 +1,357 @@
+{
+  "configuration": {
+    "inference": "descriptive finite-panel census; no IID inference",
+    "metric": "canonical positive-correlation NDCG@5",
+    "query_policy": "every full-return-eligible security",
+    "random_seed_reset_per_transition": 42,
+    "sic": "first two digits of frozen candidate-table SIC",
+    "spectral_eigenvalue_policy": "negative retained eigenvalues clipped to zero",
+    "spectral_rank": 128
+  },
+  "created_at_utc": "2026-08-02T14:47:59.576690+00:00",
+  "input_sha256": {
+    "data/universe.parquet": "aa441eaa19e8cd026bc1c198496e8f387a13f1c15dca979d0a6393eb3289ed5e",
+    "results/windows_v3/W1/corr_target.npy": "5bdfc6f5b532ab1dc8332a664b58888eb86fc0381a440196f0c147a4c725adc3",
+    "results/windows_v3/W1/meta.json": "2943d0b2c4826c7284a77e87183c9b7e20512f2bc28d7e95b7da392c8cca857f",
+    "results/windows_v3/W1/ts_features.npy": "43eb7f392d949487ad5fd95058ea8608441d1510c944190d8f24e76529ad1c39",
+    "results/windows_v3/W1/universe.parquet": "640a8157a806f62640f280bc00e1222163051d1d3e1705993ba195714245546b",
+    "results/windows_v3/W2/corr_target.npy": "f773114f84cbb99cf1274b44a19c4fd9ec37468ecff02177a4625010962ea0fb",
+    "results/windows_v3/W2/meta.json": "ae66b2efbd90af8949c3c71df238de174d54706a160253d6e2cf0a63433050c2",
+    "results/windows_v3/W2/ts_features.npy": "ea37b069df8aaf7e3323d14d1f6fbfcb5f78eb8c754276223fae7b9397b0f4d1",
+    "results/windows_v3/W2/universe.parquet": "9382fed482fc1b91df305aa51f513ca56e41d2f4a370be6176eb55cbd978540c",
+    "results/windows_v3/W3/corr_target.npy": "57ed5856e6d2b47a5787117e32bc4fddaa3dbda890ebdc695051fdf6f733e234",
+    "results/windows_v3/W3/meta.json": "393d60ba916e2a41ab309b5485bb9049ac7e3dc23eb65fd2742827a9fd3a7d32",
+    "results/windows_v3/W3/ts_features.npy": "d1af42dcc9b49f053bd9b5df0304dc5653c6508fa4e5016228d654221ca12f66",
+    "results/windows_v3/W3/universe.parquet": "9a95be729cb1942b0196d9ad11e9a18efe197e4adc530a4b90a869861550adb9",
+    "results/windows_v3/W4/corr_target.npy": "5128526937642479ee1d638e57e4f7c4d04f89ea3b0ae96c78c3bba87fb3eadd",
+    "results/windows_v3/W4/meta.json": "57fba28b7d47828d7df540e5d262c4dfb3420e4d228e87f558b5a9a9579dcdb4",
+    "results/windows_v3/W4/ts_features.npy": "0639da124693d3e35e78022b23d5e1a39470231520f1dce8228516aaa45d746b",
+    "results/windows_v3/W4/universe.parquet": "991fe26d2a518beaa31164a14764d3558e805fa193b80dea6ae0644632b9261d",
+    "results/windows_v3/W5/corr_target.npy": "df0ae5d68c148ebaa87fbe3c7ccefdcd252a482863da6051f811d87d5133c12e",
+    "results/windows_v3/W5/meta.json": "5b02a1aff54fa6a25d0a1e7be1e344de86e8ade43f07399d6c858616c0d8e83c",
+    "results/windows_v3/W5/ts_features.npy": "eebe5950a01159adffd13b2640972688e47407c687054fdb10d92921d17d910e",
+    "results/windows_v3/W5/universe.parquet": "630d7c0d502993a5da774a31431414c163086a75b7558948764c1ffd893e6209",
+    "results/windows_v3/W6/corr_target.npy": "f6854b6aa8106d7d787dc4393af35a5eec94b6ce8e0ee3dca251b4fb1451584d",
+    "results/windows_v3/W6/meta.json": "6b71c9ace09b3ac9ad707fadca0bc14a6c94837834055cb1c9186b61ea1ace96",
+    "results/windows_v3/W6/ts_features.npy": "277ecb3038b6c3ffd4f1b4a2c84ef003d98142477a86ceb629e183cef5ebb552",
+    "results/windows_v3/W6/universe.parquet": "c08172355eb73619da25459d58b870ddc01fbd6dd5f0846ce05c19082e2e9217",
+    "results/windows_v3/W7/corr_target.npy": "9b7ca0e0beaa536c259be86946fcf99b8add50cb47295cde0bb1a6bbb96a31bd",
+    "results/windows_v3/W7/meta.json": "f8396c9b7a381eac6810018cdff511acbc76097ae748bc0422ca43f80203a836",
+    "results/windows_v3/W7/ts_features.npy": "b5ae9e1147bb00038190d65ffb76bf5ebec8c3a86693984f9184538ed4921016",
+    "results/windows_v3/W7/universe.parquet": "29672304bcdc80ed3631faf2ada70de9886d4baf621f68e4dc59d2320daa9f69",
+    "scripts/metrics.py": "827e411d77466675d5837285f3c73a83d7a28fdd4d9739076dc8fd8b384b62c6",
+    "scripts/run_full_return_census.py": "9f8675d92a7451dbc566b07a88c40d17a645a342f5919bb09df01cdfccb5aa6a"
+  },
+  "per_transition": [
+    {
+      "mean_ndcg": 0.3379374141582555,
+      "method": "ReturnPath",
+      "n_queries": 1919,
+      "n_universe": 1919,
+      "n_valid": 1919,
+      "population_std_across_queries": 0.27866606486336387,
+      "transition": "W1->W2"
+    },
+    {
+      "mean_ndcg": 0.33572708270190144,
+      "method": "Spectral-dot-128",
+      "n_queries": 1919,
+      "n_universe": 1919,
+      "n_valid": 1919,
+      "population_std_across_queries": 0.2792093447935243,
+      "transition": "W1->W2"
+    },
+    {
+      "mean_ndcg": 0.33676296146490764,
+      "method": "Spectral-cos-128",
+      "n_queries": 1919,
+      "n_universe": 1919,
+      "n_valid": 1919,
+      "population_std_across_queries": 0.2801206806029552,
+      "transition": "W1->W2"
+    },
+    {
+      "mean_ndcg": 0.20449658075528584,
+      "method": "SIC-2",
+      "n_queries": 1919,
+      "n_universe": 1919,
+      "n_valid": 1919,
+      "population_std_across_queries": 0.15508086217059974,
+      "transition": "W1->W2"
+    },
+    {
+      "mean_ndcg": 0.11494399516580318,
+      "method": "Random",
+      "n_queries": 1919,
+      "n_universe": 1919,
+      "n_valid": 1919,
+      "population_std_across_queries": 0.0859929006810225,
+      "transition": "W1->W2"
+    },
+    {
+      "mean_ndcg": 0.3281541038503461,
+      "method": "ReturnPath",
+      "n_queries": 1935,
+      "n_universe": 1935,
+      "n_valid": 1935,
+      "population_std_across_queries": 0.2734398013219334,
+      "transition": "W2->W3"
+    },
+    {
+      "mean_ndcg": 0.32660098750796385,
+      "method": "Spectral-dot-128",
+      "n_queries": 1935,
+      "n_universe": 1935,
+      "n_valid": 1935,
+      "population_std_across_queries": 0.271335008054256,
+      "transition": "W2->W3"
+    },
+    {
+      "mean_ndcg": 0.32322539488183516,
+      "method": "Spectral-cos-128",
+      "n_queries": 1935,
+      "n_universe": 1935,
+      "n_valid": 1935,
+      "population_std_across_queries": 0.2704470639776079,
+      "transition": "W2->W3"
+    },
+    {
+      "mean_ndcg": 0.20636156324292457,
+      "method": "SIC-2",
+      "n_queries": 1935,
+      "n_universe": 1935,
+      "n_valid": 1935,
+      "population_std_across_queries": 0.1553961817882454,
+      "transition": "W2->W3"
+    },
+    {
+      "mean_ndcg": 0.12940194381633205,
+      "method": "Random",
+      "n_queries": 1935,
+      "n_universe": 1935,
+      "n_valid": 1935,
+      "population_std_across_queries": 0.09281663972909678,
+      "transition": "W2->W3"
+    },
+    {
+      "mean_ndcg": 0.3391810542258445,
+      "method": "ReturnPath",
+      "n_queries": 1948,
+      "n_universe": 1948,
+      "n_valid": 1948,
+      "population_std_across_queries": 0.2753262999498993,
+      "transition": "W3->W4"
+    },
+    {
+      "mean_ndcg": 0.3367745170233438,
+      "method": "Spectral-dot-128",
+      "n_queries": 1948,
+      "n_universe": 1948,
+      "n_valid": 1948,
+      "population_std_across_queries": 0.2721133178270669,
+      "transition": "W3->W4"
+    },
+    {
+      "mean_ndcg": 0.3362778966090079,
+      "method": "Spectral-cos-128",
+      "n_queries": 1948,
+      "n_universe": 1948,
+      "n_valid": 1948,
+      "population_std_across_queries": 0.27275324216601066,
+      "transition": "W3->W4"
+    },
+    {
+      "mean_ndcg": 0.23180580693747505,
+      "method": "SIC-2",
+      "n_queries": 1948,
+      "n_universe": 1948,
+      "n_valid": 1948,
+      "population_std_across_queries": 0.168318389130213,
+      "transition": "W3->W4"
+    },
+    {
+      "mean_ndcg": 0.12311541968346222,
+      "method": "Random",
+      "n_queries": 1948,
+      "n_universe": 1948,
+      "n_valid": 1948,
+      "population_std_across_queries": 0.08621832131315556,
+      "transition": "W3->W4"
+    },
+    {
+      "mean_ndcg": 0.35077048885666307,
+      "method": "ReturnPath",
+      "n_queries": 1955,
+      "n_universe": 1955,
+      "n_valid": 1955,
+      "population_std_across_queries": 0.29219771025051655,
+      "transition": "W4->W5"
+    },
+    {
+      "mean_ndcg": 0.34720758829342113,
+      "method": "Spectral-dot-128",
+      "n_queries": 1955,
+      "n_universe": 1955,
+      "n_valid": 1955,
+      "population_std_across_queries": 0.29108717907006293,
+      "transition": "W4->W5"
+    },
+    {
+      "mean_ndcg": 0.34733317171771017,
+      "method": "Spectral-cos-128",
+      "n_queries": 1955,
+      "n_universe": 1955,
+      "n_valid": 1955,
+      "population_std_across_queries": 0.2919713720011963,
+      "transition": "W4->W5"
+    },
+    {
+      "mean_ndcg": 0.21212259689076218,
+      "method": "SIC-2",
+      "n_queries": 1955,
+      "n_universe": 1955,
+      "n_valid": 1955,
+      "population_std_across_queries": 0.1624270474448992,
+      "transition": "W4->W5"
+    },
+    {
+      "mean_ndcg": 0.11301676519084725,
+      "method": "Random",
+      "n_queries": 1955,
+      "n_universe": 1955,
+      "n_valid": 1955,
+      "population_std_across_queries": 0.0843974017112495,
+      "transition": "W4->W5"
+    },
+    {
+      "mean_ndcg": 0.3368964664924384,
+      "method": "ReturnPath",
+      "n_queries": 1967,
+      "n_universe": 1967,
+      "n_valid": 1967,
+      "population_std_across_queries": 0.2795276237618654,
+      "transition": "W5->W6"
+    },
+    {
+      "mean_ndcg": 0.33390160512896405,
+      "method": "Spectral-dot-128",
+      "n_queries": 1967,
+      "n_universe": 1967,
+      "n_valid": 1967,
+      "population_std_across_queries": 0.2784647171300187,
+      "transition": "W5->W6"
+    },
+    {
+      "mean_ndcg": 0.33341852335573985,
+      "method": "Spectral-cos-128",
+      "n_queries": 1967,
+      "n_universe": 1967,
+      "n_valid": 1967,
+      "population_std_across_queries": 0.27936499414105803,
+      "transition": "W5->W6"
+    },
+    {
+      "mean_ndcg": 0.2053580147250268,
+      "method": "SIC-2",
+      "n_queries": 1967,
+      "n_universe": 1967,
+      "n_valid": 1967,
+      "population_std_across_queries": 0.15762573839124208,
+      "transition": "W5->W6"
+    },
+    {
+      "mean_ndcg": 0.11213032412075224,
+      "method": "Random",
+      "n_queries": 1967,
+      "n_universe": 1967,
+      "n_valid": 1967,
+      "population_std_across_queries": 0.08485080056236745,
+      "transition": "W5->W6"
+    },
+    {
+      "mean_ndcg": 0.33948936608644287,
+      "method": "ReturnPath",
+      "n_queries": 1979,
+      "n_universe": 1979,
+      "n_valid": 1979,
+      "population_std_across_queries": 0.27703274549342677,
+      "transition": "W6->W7"
+    },
+    {
+      "mean_ndcg": 0.3337883241862891,
+      "method": "Spectral-dot-128",
+      "n_queries": 1979,
+      "n_universe": 1979,
+      "n_valid": 1979,
+      "population_std_across_queries": 0.2724838399057475,
+      "transition": "W6->W7"
+    },
+    {
+      "mean_ndcg": 0.33082699077133304,
+      "method": "Spectral-cos-128",
+      "n_queries": 1979,
+      "n_universe": 1979,
+      "n_valid": 1979,
+      "population_std_across_queries": 0.27016444841386905,
+      "transition": "W6->W7"
+    },
+    {
+      "mean_ndcg": 0.2164666982634982,
+      "method": "SIC-2",
+      "n_queries": 1979,
+      "n_universe": 1979,
+      "n_valid": 1979,
+      "population_std_across_queries": 0.16236680330754644,
+      "transition": "W6->W7"
+    },
+    {
+      "mean_ndcg": 0.11766418832572488,
+      "method": "Random",
+      "n_queries": 1979,
+      "n_universe": 1979,
+      "n_valid": 1979,
+      "population_std_across_queries": 0.0883872326527146,
+      "transition": "W6->W7"
+    }
+  ],
+  "runtime_seconds": 8.521867666997423,
+  "schema_version": "full-return-census-v1",
+  "software": {
+    "numpy": "2.4.2",
+    "polars": "1.39.3",
+    "python": "3.13.2",
+    "scipy": "1.17.1",
+    "sklearn": "1.8.0"
+  },
+  "summary": {
+    "aggregates": {
+      "Random": {
+        "macro_mean_ndcg": 0.11837877271715364,
+        "n_transitions": 6,
+        "population_std_across_transition_means": 0.006110764925099722
+      },
+      "ReturnPath": {
+        "macro_mean_ndcg": 0.3387381489449984,
+        "n_transitions": 6,
+        "population_std_across_transition_means": 0.006602937187994961
+      },
+      "SIC-2": {
+        "macro_mean_ndcg": 0.2127685434691621,
+        "n_transitions": 6,
+        "population_std_across_transition_means": 0.0094947502622396
+      },
+      "Spectral-cos-128": {
+        "macro_mean_ndcg": 0.3346408231334223,
+        "n_transitions": 6,
+        "population_std_across_transition_means": 0.0072414378112738
+      },
+      "Spectral-dot-128": {
+        "macro_mean_ndcg": 0.3356666841403139,
+        "n_transitions": 6,
+        "population_std_across_transition_means": 0.00609991811170673
+      }
+    },
+    "n_universe_max": 1979,
+    "n_universe_min": 1919
+  }
+}

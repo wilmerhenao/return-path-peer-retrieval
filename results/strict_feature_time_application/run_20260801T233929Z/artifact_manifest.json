@@ -1,0 +1,15 @@
+{
+  "artifact_sha256": {
+    "strict_application_census.json": "a28e6fe6a78179f487313250018a5047b4b938f845110044068537b782012e36",
+    "strict_application_per_query.csv.gz": "b999498d6e6db3c76f1dac286753491d5a1f33a3619c45d9d8fe3f00ad7fb00e"
+  },
+  "artifacts": {
+    "strict_application_census.json": "a28e6fe6a78179f487313250018a5047b4b938f845110044068537b782012e36",
+    "strict_application_per_query.csv.gz": "b999498d6e6db3c76f1dac286753491d5a1f33a3619c45d9d8fe3f00ad7fb00e"
+  },
+  "future_corr_target_loaded": false,
+  "generated_utc": "2026-08-01T23:39:09.969290Z",
+  "input_count": 40,
+  "schema_version": "strict-feature-time-application-v1",
+  "selection_uses_target_availability": false
+}

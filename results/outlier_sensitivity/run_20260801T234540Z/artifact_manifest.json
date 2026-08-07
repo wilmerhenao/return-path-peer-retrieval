@@ -1,0 +1,606 @@
+{
+  "artifact_sha256": {
+    "outlier_sensitivity_census.json": "18204dffe17260b00cfa48c64bd7669dea1b010d9007e9dbd780e77937241827",
+    "per_transition.csv": "4c1ef870f0edb555ec5d681127a5c7d6c9fb6758759b0b171c17ebd97410e8f0",
+    "publication_summary.json": "273b9db13e7e370dc662f74e26404043d3bf3147c3039d9d3385dd9743571088"
+  },
+  "configuration": {
+    "aggregation": "six transitions receive equal weight in macro means; NDCG also reports query-weighted means; basket pooled variance reduction sums per-query target and error variances within transition, then macro-averages transition values",
+    "application_diagnostic": "unfitted equal-notional arithmetic mean of five selected peer raw FF5 residual paths in W_{t+1}",
+    "base_universe": "lexicographically sorted intersection of W_t and W_{t+1} return availability and non-empty W_t vintage 10-K Item 1",
+    "frozen_blend": {
+      "alpha_return_path": 0.8,
+      "alpha_tfidf": 0.19999999999999996,
+      "definition": "alpha*per-query average-percentile-rank(ReturnPath) + (1-alpha)*per-query average-percentile-rank(TF-IDF)",
+      "selection": "alpha selected only on historical transitions"
+    },
+    "metric": {
+      "implementation": "scripts.metrics.ndcg_at_k",
+      "name": "canonical positive-relevance NDCG@5",
+      "query_policy": "every security retained by each screen",
+      "relevance": "max(0, recomputed target-window correlation)",
+      "tie_handling": "canonical seeded jitter with TIE_RNG_BASE plus sorted screened-universe query index"
+    },
+    "modern_transitions": [
+      "W1->W2",
+      "W2->W3",
+      "W3->W4",
+      "W4->W5",
+      "W5->W6",
+      "W6->W7"
+    ],
+    "return_path": "cosine similarity of W_t standardized raw FF5 residual paths",
+    "screens": [
+      {
+        "exclude_rule": null,
+        "primary_retrospective_sensitivity": false,
+        "scope": "none",
+        "screen_id": "unscreened",
+        "threshold_max_abs_raw_residual": null
+      },
+      {
+        "exclude_rule": "exclude security if max absolute daily raw FF5 residual exceeds 1 in W_t",
+        "primary_retrospective_sensitivity": false,
+        "scope": "feature_only",
+        "screen_id": "feature_max_abs_le_1p0",
+        "threshold_max_abs_raw_residual": 1.0
+      },
+      {
+        "exclude_rule": "exclude security if max absolute daily raw FF5 residual exceeds 1 in either W_t or W_{t+1}",
+        "primary_retrospective_sensitivity": true,
+        "scope": "feature_and_target",
+        "screen_id": "either_window_max_abs_le_1p0",
+        "threshold_max_abs_raw_residual": 1.0
+      },
+      {
+        "exclude_rule": "exclude security if max absolute daily raw FF5 residual exceeds 0.5 in W_t",
+        "primary_retrospective_sensitivity": false,
+        "scope": "feature_only",
+        "screen_id": "feature_max_abs_le_0p5",
+        "threshold_max_abs_raw_residual": 0.5
+      },
+      {
+        "exclude_rule": "exclude security if max absolute daily raw FF5 residual exceeds 0.5 in either W_t or W_{t+1}",
+        "primary_retrospective_sensitivity": false,
+        "scope": "feature_and_target",
+        "screen_id": "either_window_max_abs_le_0p5",
+        "threshold_max_abs_raw_residual": 0.5
+      }
+    ],
+    "tfidf": {
+      "kwargs": {
+        "max_features": 50000,
+        "min_df": 2,
+        "ngram_range": [
+          1,
+          2
+        ],
+        "stop_words": "english",
+        "strip_accents": "unicode",
+        "sublinear_tf": true
+      },
+      "refit_policy": "vocabulary and IDF refit for each screened corpus",
+      "selection": "configuration b selected only on historical transitions"
+    }
+  },
+  "generated_utc": "2026-08-01T23:45:40.390725Z",
+  "primary_summary": {
+    "baseline_reconciliation": {
+      "absolute_error": {
+        "FrozenBlend": 1.8374968213663578e-10,
+        "ReturnPath": 4.122241992199349e-10,
+        "TF-IDF": 2.1417290163583402e-10
+      },
+      "expected_from_frozen_modern_artifact": {
+        "FrozenBlend": 0.3729682197528556,
+        "ReturnPath": 0.3356178591875005,
+        "TF-IDF": 0.300094087115422
+      },
+      "observed": {
+        "FrozenBlend": 0.3729682199366053,
+        "ReturnPath": 0.3356178587752763,
+        "TF-IDF": 0.3000940873295949
+      },
+      "passes": true,
+      "tolerance": 2e-06
+    },
+    "generated_utc": "2026-08-01T23:45:40.390725Z",
+    "primary": {
+      "change_from_unscreened": {
+        "FrozenBlend": {
+          "macro_mean_ndcg_at_5_delta": 0.0049978173332768105,
+          "macro_mean_pooled_target_variance_reduction_delta": 0.02559590095883242,
+          "macro_mean_query_basket_correlation_delta": 0.005490219091288134
+        },
+        "ReturnPath": {
+          "macro_mean_ndcg_at_5_delta": 0.004869278080695649,
+          "macro_mean_pooled_target_variance_reduction_delta": 0.23973798367832966,
+          "macro_mean_query_basket_correlation_delta": 0.0059156639418891654
+        },
+        "TF-IDF": {
+          "macro_mean_ndcg_at_5_delta": 0.004729949411548695,
+          "macro_mean_pooled_target_variance_reduction_delta": 0.08160403915303724,
+          "macro_mean_query_basket_correlation_delta": 0.007740008217565014
+        }
+      },
+      "comparisons": [
+        {
+          "left_method": "ReturnPath",
+          "ndcg_at_5": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.03566310011482839,
+            "per_transition_left_minus_right": [
+              0.05330318989689137,
+              0.019606242593157297,
+              0.0235394871705204,
+              0.05305207265578438,
+              0.041666707761312705,
+              0.022810900611304197
+            ],
+            "population_std_left_minus_right": 0.014257022449161176,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "pooled_target_variance_reduction": {
+            "left_wins": 5,
+            "macro_mean_left_minus_right": 0.015299752959305265,
+            "per_transition_left_minus_right": [
+              0.028142155544713665,
+              0.009875065031107244,
+              0.027940977821727886,
+              0.01783371636682407,
+              -0.0048751989152326924,
+              0.012881801906691415
+            ],
+            "population_std_left_minus_right": 0.011353789751222402,
+            "right_wins": 1,
+            "ties": 0
+          },
+          "query_basket_correlation": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.020639152635783965,
+            "per_transition_left_minus_right": [
+              0.03320809372745623,
+              0.011262415902960038,
+              0.018738956239179844,
+              0.03278762493968809,
+              0.019427735457784506,
+              0.008410089547635086
+            ],
+            "population_std_left_minus_right": 0.009557851163485856,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "right_method": "TF-IDF"
+        },
+        {
+          "left_method": "FrozenBlend",
+          "ndcg_at_5": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.037478900413910075,
+            "per_transition_left_minus_right": [
+              0.026995121716025916,
+              0.03799911404027978,
+              0.049373258263411046,
+              0.03146368665285776,
+              0.03645601454881159,
+              0.04258620726207435
+            ],
+            "population_std_left_minus_right": 0.007245339444322501,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "pooled_target_variance_reduction": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.017455712655572775,
+            "per_transition_left_minus_right": [
+              0.008470642048984622,
+              0.017169337005116025,
+              0.02176771313105208,
+              0.019609462463689775,
+              0.024688839402718044,
+              0.013028281881876103
+            ],
+            "population_std_left_minus_right": 0.005415498698968718,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "query_basket_correlation": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.039903377525973935,
+            "per_transition_left_minus_right": [
+              0.03169198491134417,
+              0.04298052898907001,
+              0.05247846845770324,
+              0.0349412443142344,
+              0.03639449240776996,
+              0.04093354607572183
+            ],
+            "population_std_left_minus_right": 0.006745677996124414,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "right_method": "ReturnPath"
+        },
+        {
+          "left_method": "FrozenBlend",
+          "ndcg_at_5": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.07314200052873847,
+            "per_transition_left_minus_right": [
+              0.08029831161291728,
+              0.05760535663343708,
+              0.07291274543393145,
+              0.08451575930864214,
+              0.07812272231012429,
+              0.06539710787337855
+            ],
+            "population_std_left_minus_right": 0.009190629197281114,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "pooled_target_variance_reduction": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.03275546561487804,
+            "per_transition_left_minus_right": [
+              0.03661279759369829,
+              0.02704440203622327,
+              0.049708690952779966,
+              0.037443178830513846,
+              0.01981364048748535,
+              0.025910083788567517
+            ],
+            "population_std_left_minus_right": 0.009757320770580313,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "query_basket_correlation": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.060542530161757896,
+            "per_transition_left_minus_right": [
+              0.0649000786388004,
+              0.05424294489203005,
+              0.07121742469688308,
+              0.06772886925392249,
+              0.055822227865554463,
+              0.04934363562335692
+            ],
+            "population_std_left_minus_right": 0.0078736516182533,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "right_method": "TF-IDF"
+        }
+      ],
+      "methods": {
+        "FrozenBlend": {
+          "macro_mean_ndcg_at_5": 0.3779660372698821,
+          "macro_mean_pooled_target_variance_reduction": -0.07957184323676307,
+          "macro_mean_query_basket_correlation": 0.2532211191342193,
+          "macro_mean_selected_pairwise_target_correlation": 0.17588902126370828,
+          "maximum_transition_mean_ndcg_at_5": 0.38587326412107287,
+          "minimum_transition_mean_ndcg_at_5": 0.36597249128443,
+          "n_transitions": 6,
+          "population_std_pooled_target_variance_reduction": 0.008105836656350347,
+          "population_std_transition_mean_ndcg_at_5": 0.008124079346732165,
+          "population_std_transition_mean_query_basket_correlation": 0.0100973217174072,
+          "query_weighted_mean_ndcg_at_5": 0.37796940164713055,
+          "total_queries_across_transitions": 9575,
+          "transitions_positive_pooled_target_variance_reduction": 0
+        },
+        "ReturnPath": {
+          "macro_mean_ndcg_at_5": 0.34048713685597193,
+          "macro_mean_pooled_target_variance_reduction": -0.09702755589233585,
+          "macro_mean_query_basket_correlation": 0.21331774160824535,
+          "macro_mean_selected_pairwise_target_correlation": 0.1518728028073524,
+          "maximum_transition_mean_ndcg_at_5": 0.3544095774682151,
+          "minimum_transition_mean_ndcg_at_5": 0.3279733772441502,
+          "n_transitions": 6,
+          "population_std_pooled_target_variance_reduction": 0.010019621522493251,
+          "population_std_transition_mean_ndcg_at_5": 0.007978485716196138,
+          "population_std_transition_mean_query_basket_correlation": 0.008232613030173634,
+          "query_weighted_mean_ndcg_at_5": 0.34047196655204043,
+          "total_queries_across_transitions": 9575,
+          "transitions_positive_pooled_target_variance_reduction": 0
+        },
+        "TF-IDF": {
+          "macro_mean_ndcg_at_5": 0.3048240367411436,
+          "macro_mean_pooled_target_variance_reduction": -0.1123273088516411,
+          "macro_mean_query_basket_correlation": 0.19267858897246137,
+          "macro_mean_selected_pairwise_target_correlation": 0.12817367260604193,
+          "maximum_transition_mean_ndcg_at_5": 0.32001011705833415,
+          "minimum_transition_mean_ndcg_at_5": 0.28943249067103183,
+          "n_transitions": 6,
+          "population_std_pooled_target_variance_reduction": 0.015424645691056475,
+          "population_std_transition_mean_ndcg_at_5": 0.010121050224077716,
+          "population_std_transition_mean_query_basket_correlation": 0.00893633808288213,
+          "query_weighted_mean_ndcg_at_5": 0.3048455955880656,
+          "total_queries_across_transitions": 9575,
+          "transitions_positive_pooled_target_variance_reduction": 0
+        }
+      },
+      "primary_retrospective_sensitivity": true,
+      "scope": "feature_and_target",
+      "threshold_max_abs_raw_residual": 1.0,
+      "universe": {
+        "exclusion_share_across_transition_security_rows": 0.015221639411704206,
+        "maximum_n_after": 1604,
+        "maximum_n_before": 1631,
+        "minimum_n_after": 1587,
+        "minimum_n_before": 1614,
+        "total_transition_security_exclusions": 148
+      }
+    },
+    "primary_screen": "either_window_max_abs_le_1p0",
+    "primary_screen_is_retrospective": true,
+    "publication_ready_application_sentence": "For the no-fit equal-notional peer basket under the same screen, mean next-window query--basket correlation is 0.213/0.193/0.253, while macro pooled variance reduction is -0.097/-0.112/-0.080; these are co-movement diagnostics, not hedge or profitability results.",
+    "publication_ready_ndcg_sentence": "After full reranking on the retrospective 1.0 either-window screen, macro NDCG@5 is 0.340/0.305/0.378 for ReturnPath, TF-IDF, and the frozen blend; the blend exceeds ReturnPath in 6/6 transitions and TF-IDF in 6/6.",
+    "required_caveat": "The either-window screen uses W_{t+1} residual magnitudes to define the evaluation universe and is therefore a retrospective data-quality sensitivity, not a live or leakage-free backtest.",
+    "runtime_seconds": 80.23673216699899,
+    "schema_version": "raw-residual-outlier-sensitivity-v1",
+    "unscreened_reference": {
+      "comparisons": [
+        {
+          "left_method": "ReturnPath",
+          "ndcg_at_5": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.035523771445681356,
+            "per_transition_left_minus_right": [
+              0.05089891647467315,
+              0.020596028445846182,
+              0.026188472852946676,
+              0.052781235074569,
+              0.040542700101730555,
+              0.022135275724322556
+            ],
+            "population_std_left_minus_right": 0.013220198617928728,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "pooled_target_variance_reduction": {
+            "left_wins": 2,
+            "macro_mean_left_minus_right": -0.1428341915659872,
+            "per_transition_left_minus_right": [
+              -0.07715161019747052,
+              0.26293138300982477,
+              -0.08635376859384425,
+              0.04163739452571247,
+              -0.9180798357923263,
+              -0.07998871234781935
+            ],
+            "population_std_left_minus_right": 0.36768081048885387,
+            "right_wins": 4,
+            "ties": 0
+          },
+          "query_basket_correlation": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.022463496911459834,
+            "per_transition_left_minus_right": [
+              0.03362371604641071,
+              0.01177625690754533,
+              0.020097882851318444,
+              0.03730250172726393,
+              0.02141705519139603,
+              0.010563568744824559
+            ],
+            "population_std_left_minus_right": 0.010060343884869276,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "right_method": "TF-IDF"
+        },
+        {
+          "left_method": "FrozenBlend",
+          "ndcg_at_5": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.03735036116132895,
+            "per_transition_left_minus_right": [
+              0.02794268223406504,
+              0.0374832610555722,
+              0.049870031798808945,
+              0.031225984236651905,
+              0.03623279230414472,
+              0.041347415338730875
+            ],
+            "population_std_left_minus_right": 0.007071039916618877,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "pooled_target_variance_reduction": {
+            "left_wins": 5,
+            "macro_mean_left_minus_right": 0.23159779537507005,
+            "per_transition_left_minus_right": [
+              0.16657284578333664,
+              -0.07928744747383476,
+              0.08025208157831054,
+              0.0245082993235759,
+              1.0375488509824418,
+              0.15999214205659018
+            ],
+            "population_std_left_minus_right": 0.369989625163541,
+            "right_wins": 1,
+            "ties": 0
+          },
+          "query_basket_correlation": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.040328822376574966,
+            "per_transition_left_minus_right": [
+              0.031799280931140456,
+              0.04323071677697862,
+              0.05448822414119203,
+              0.035616194394080314,
+              0.039596125393229376,
+              0.037242392622828996
+            ],
+            "population_std_left_minus_right": 0.007233423379331115,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "right_method": "ReturnPath"
+        },
+        {
+          "left_method": "FrozenBlend",
+          "ndcg_at_5": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.0728741326070103,
+            "per_transition_left_minus_right": [
+              0.07884159870873819,
+              0.058079289501418385,
+              0.07605850465175562,
+              0.0840072193112209,
+              0.07677549240587528,
+              0.06348269106305343
+            ],
+            "population_std_left_minus_right": 0.009055418834699082,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "pooled_target_variance_reduction": {
+            "left_wins": 5,
+            "macro_mean_left_minus_right": 0.08876360380908284,
+            "per_transition_left_minus_right": [
+              0.08942123558586612,
+              0.18364393553599,
+              -0.006101687015533708,
+              0.06614569384928837,
+              0.11946901519011544,
+              0.08000342970877083
+            ],
+            "population_std_left_minus_right": 0.057057377584171724,
+            "right_wins": 1,
+            "ties": 0
+          },
+          "query_basket_correlation": {
+            "left_wins": 6,
+            "macro_mean_left_minus_right": 0.0627923192880348,
+            "per_transition_left_minus_right": [
+              0.06542299697755116,
+              0.05500697368452395,
+              0.07458610699251048,
+              0.07291869612134425,
+              0.061013180584625404,
+              0.047805961367653554
+            ],
+            "population_std_left_minus_right": 0.009459785636263962,
+            "right_wins": 0,
+            "ties": 0
+          },
+          "right_method": "TF-IDF"
+        }
+      ],
+      "methods": {
+        "FrozenBlend": {
+          "macro_mean_ndcg_at_5": 0.3729682199366053,
+          "macro_mean_pooled_target_variance_reduction": -0.10516774419559549,
+          "macro_mean_query_basket_correlation": 0.24773090004293116,
+          "macro_mean_selected_pairwise_target_correlation": 0.17309891762161136,
+          "maximum_transition_mean_ndcg_at_5": 0.3823126764833275,
+          "minimum_transition_mean_ndcg_at_5": 0.3625352469634827,
+          "n_transitions": 6,
+          "population_std_pooled_target_variance_reduction": 0.030372444196264118,
+          "population_std_transition_mean_ndcg_at_5": 0.0075893048628006415,
+          "population_std_transition_mean_query_basket_correlation": 0.010379573742811114,
+          "query_weighted_mean_ndcg_at_5": 0.3729771176564536,
+          "total_queries_across_transitions": 9723,
+          "transitions_positive_pooled_target_variance_reduction": 0
+        },
+        "ReturnPath": {
+          "macro_mean_ndcg_at_5": 0.3356178587752763,
+          "macro_mean_pooled_target_variance_reduction": -0.3367655395706655,
+          "macro_mean_query_basket_correlation": 0.20740207766635618,
+          "macro_mean_selected_pairwise_target_correlation": 0.14933942186850957,
+          "maximum_transition_mean_ndcg_at_5": 0.3477752965690996,
+          "minimum_transition_mean_ndcg_at_5": 0.3250519859079105,
+          "n_transitions": 6,
+          "population_std_pooled_target_variance_reduction": 0.34033095613583153,
+          "population_std_transition_mean_ndcg_at_5": 0.006884906785803923,
+          "population_std_transition_mean_query_basket_correlation": 0.007838606856210484,
+          "query_weighted_mean_ndcg_at_5": 0.33562015975775916,
+          "total_queries_across_transitions": 9723,
+          "transitions_positive_pooled_target_variance_reduction": 0
+        },
+        "TF-IDF": {
+          "macro_mean_ndcg_at_5": 0.3000940873295949,
+          "macro_mean_pooled_target_variance_reduction": -0.19393134800467834,
+          "macro_mean_query_basket_correlation": 0.18493858075489636,
+          "macro_mean_selected_pairwise_target_correlation": 0.12571043316629968,
+          "maximum_transition_mean_ndcg_at_5": 0.3158620925288714,
+          "minimum_transition_mean_ndcg_at_5": 0.2864316919914018,
+          "n_transitions": 6,
+          "population_std_pooled_target_variance_reduction": 0.06546593688961531,
+          "population_std_transition_mean_ndcg_at_5": 0.009788919656671675,
+          "population_std_transition_mean_query_basket_correlation": 0.009503090321526183,
+          "query_weighted_mean_ndcg_at_5": 0.3001072005767369,
+          "total_queries_across_transitions": 9723,
+          "transitions_positive_pooled_target_variance_reduction": 0
+        }
+      },
+      "primary_retrospective_sensitivity": false,
+      "scope": "none",
+      "threshold_max_abs_raw_residual": null,
+      "universe": {
+        "exclusion_share_across_transition_security_rows": 0.0,
+        "maximum_n_after": 1631,
+        "maximum_n_before": 1631,
+        "minimum_n_after": 1614,
+        "minimum_n_before": 1614,
+        "total_transition_security_exclusions": 0
+      }
+    }
+  },
+  "provenance": {
+    "environment": {
+      "numpy": "2.4.2",
+      "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+      "polars": "1.39.3",
+      "python": "3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0 (clang-1500.3.9.4)]",
+      "scikit_learn": "1.8.0",
+      "scipy": "1.17.1"
+    },
+    "input_sha256": {
+      "requirements.lock": "8f488bff50ef8e51b95a1973b78ef577f4db9e8974b8f3447df0ccd654da7f22",
+      "results/acceptance_robustness/run_20260730T032543Z/02_blend_historical_tuning_modern_frozen.json": "32f43b42592758071bfd7b57411ec1f0f0f481290be88b9432afbff8ce3eaf64",
+      "results/acceptance_robustness/run_20260730T032543Z/artifact_manifest.json": "64ce62c36ef46d970a8fb51e4727b61614c0367584b19316ca1a4b44b1d7eb74",
+      "results/vintage_descriptions/W1_descriptions.parquet": "100261ff7c7c0e1a17e7c622c4f5584cbda21a7eedcc6d1cdfad4d7ee2574f11",
+      "results/vintage_descriptions/W2_descriptions.parquet": "ee17b7ac31f097fe1e08bebbe3f17f91d06ed23f659c1ac0f7bc0aa9d3c27eac",
+      "results/vintage_descriptions/W3_descriptions.parquet": "0e868c70a2620f4482e99514f7828a176c5efc8cc4ff7092d1fe7ccfa2e4bcc8",
+      "results/vintage_descriptions/W4_descriptions.parquet": "bcdb52210f6729066e472a915c02218265b6faf30a8d2796bbf5f33d8599de3c",
+      "results/vintage_descriptions/W5_descriptions.parquet": "2bb90924fc9fc2b932e3d8dbb63a11aea845fd2c7d771e5a0af6e8599f548043",
+      "results/vintage_descriptions/W6_descriptions.parquet": "56a6bb893f78355a1c7a1186d0397ae60ccb747a69725fd27ece28b7cc304378",
+      "results/windows_v3/W1/meta.json": "2943d0b2c4826c7284a77e87183c9b7e20512f2bc28d7e95b7da392c8cca857f",
+      "results/windows_v3/W1/raw_resid.npy": "c423fe8b8f327aa65514250f80abd4337a7be7edbbee3ae19ef2b7227a9f34c1",
+      "results/windows_v3/W1/ts_features.npy": "43eb7f392d949487ad5fd95058ea8608441d1510c944190d8f24e76529ad1c39",
+      "results/windows_v3/W1/universe.parquet": "640a8157a806f62640f280bc00e1222163051d1d3e1705993ba195714245546b",
+      "results/windows_v3/W2/meta.json": "ae66b2efbd90af8949c3c71df238de174d54706a160253d6e2cf0a63433050c2",
+      "results/windows_v3/W2/raw_resid.npy": "837c4e67e3a61518332607b89555b604749cf91d350b0086fdd1c9151ea85edb",
+      "results/windows_v3/W2/ts_features.npy": "ea37b069df8aaf7e3323d14d1f6fbfcb5f78eb8c754276223fae7b9397b0f4d1",
+      "results/windows_v3/W2/universe.parquet": "9382fed482fc1b91df305aa51f513ca56e41d2f4a370be6176eb55cbd978540c",
+      "results/windows_v3/W3/meta.json": "393d60ba916e2a41ab309b5485bb9049ac7e3dc23eb65fd2742827a9fd3a7d32",
+      "results/windows_v3/W3/raw_resid.npy": "c801c4f80209981c96bad0efe0892f1a4543490757311c52e77e8872e9cc88d0",
+      "results/windows_v3/W3/ts_features.npy": "d1af42dcc9b49f053bd9b5df0304dc5653c6508fa4e5016228d654221ca12f66",
+      "results/windows_v3/W3/universe.parquet": "9a95be729cb1942b0196d9ad11e9a18efe197e4adc530a4b90a869861550adb9",
+      "results/windows_v3/W4/meta.json": "57fba28b7d47828d7df540e5d262c4dfb3420e4d228e87f558b5a9a9579dcdb4",
+      "results/windows_v3/W4/raw_resid.npy": "e2f15f523e461e1eba1c22fc994bbfcf0d3b81625a42809c8699f82945187bed",
+      "results/windows_v3/W4/ts_features.npy": "0639da124693d3e35e78022b23d5e1a39470231520f1dce8228516aaa45d746b",
+      "results/windows_v3/W4/universe.parquet": "991fe26d2a518beaa31164a14764d3558e805fa193b80dea6ae0644632b9261d",
+      "results/windows_v3/W5/meta.json": "5b02a1aff54fa6a25d0a1e7be1e344de86e8ade43f07399d6c858616c0d8e83c",
+      "results/windows_v3/W5/raw_resid.npy": "b264694002635886749f1070cd54562885f30c1c7578128b687449b5b03ef1a4",
+      "results/windows_v3/W5/ts_features.npy": "eebe5950a01159adffd13b2640972688e47407c687054fdb10d92921d17d910e",
+      "results/windows_v3/W5/universe.parquet": "630d7c0d502993a5da774a31431414c163086a75b7558948764c1ffd893e6209",
+      "results/windows_v3/W6/meta.json": "6b71c9ace09b3ac9ad707fadca0bc14a6c94837834055cb1c9186b61ea1ace96",
+      "results/windows_v3/W6/raw_resid.npy": "ca5817a16d95815d47345a1be6f0c7ba9e7429fc665c006e6892995a916eba6d",
+      "results/windows_v3/W6/ts_features.npy": "277ecb3038b6c3ffd4f1b4a2c84ef003d98142477a86ceb629e183cef5ebb552",
+      "results/windows_v3/W6/universe.parquet": "c08172355eb73619da25459d58b870ddc01fbd6dd5f0846ce05c19082e2e9217",
+      "results/windows_v3/W7/meta.json": "f8396c9b7a381eac6810018cdff511acbc76097ae748bc0422ca43f80203a836",
+      "results/windows_v3/W7/raw_resid.npy": "2b3f0ba02b8fd7d5038d8ee16eeaf19e90d9106ffd878db9a27e8d9c4a187a0a",
+      "results/windows_v3/W7/ts_features.npy": "b5ae9e1147bb00038190d65ffb76bf5ebec8c3a86693984f9184538ed4921016",
+      "results/windows_v3/W7/universe.parquet": "29672304bcdc80ed3631faf2ada70de9886d4baf621f68e4dc59d2320daa9f69",
+      "scripts/metrics.py": "827e411d77466675d5837285f3c73a83d7a28fdd4d9739076dc8fd8b384b62c6",
+      "scripts/run_acceptance_robustness.py": "55ed41a9379df7a8a74f5dd25233c209de45eacac26c8d487a8d7020650d10c3",
+      "scripts/run_downstream_peer_hedging.py": "f1b96ab639c657428a9cf6fed4cd7779eb7af0571f58a851694f7c9782d80e1a",
+      "scripts/run_outlier_sensitivity.py": "2fc665bff6194fed948f227aca1b0ac90c8807b7fd968f84c427932406edc151"
+    }
+  },
+  "runtime_seconds": 80.23673216699899,
+  "schema_version": "raw-residual-outlier-sensitivity-v1"
+}

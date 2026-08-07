@@ -1,0 +1,10 @@
+{
+  "artifact_sha256": {
+    "memory_fusion_audit.json": "7371f7c726caf733141514a1fc17b09b4c0534c9a2e2fd9a5cd720b14fdf2541"
+  },
+  "run_id": "run_20260731T131959Z",
+  "schema_version": "memory-fusion-audit-v1",
+  "source_sha256": {
+    "scripts/run_memory_fusion_audit.py": "92263686a61e7fe13f094435148862e2cfaa030e1f593fe9b1a0c90de16493b6"
+  }
+}

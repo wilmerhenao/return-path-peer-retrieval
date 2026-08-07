@@ -1,0 +1,17 @@
+{
+  "artifact_sha256": {
+    "same_window_text_diagnostic.json": "dcbca72a3fd038ba4185fd5865a7628955d80730ce32319eb36edf63afc38986"
+  },
+  "notes": [
+    "The relevance matrix changes from W_{t+1} to W_t; the feature-time universe does not.",
+    "No contemporaneous or future target selected a representation or hyperparameter.",
+    "The diagnostic is descriptive and does not support IID pair-level inference."
+  ],
+  "run_id": "run_20260802T_same_window_authority_v2",
+  "schema_version": "same-window-text-diagnostic-v1",
+  "source_sha256": {
+    "scripts/metrics.py": "e31a8fa1f0998074893224d0331ee63c570c09ba87f8c8cefbd74fe57b2f8230",
+    "scripts/run_acceptance_robustness.py": "55ed41a9379df7a8a74f5dd25233c209de45eacac26c8d487a8d7020650d10c3",
+    "scripts/run_same_window_text_diagnostic.py": "83748b034830959e65f040c5fe6ec7de80fd1ce64799229eddd3e4ccb7fdbae7"
+  }
+}
