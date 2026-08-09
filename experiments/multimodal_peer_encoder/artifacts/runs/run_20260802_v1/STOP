@@ -1,6 +1,0 @@
-{
-  "historical_selection_sha256": "e21dbc7350b1d339f771fbb8ec22ddda211f0a89cb2d55ba8394e5da230f0218",
-  "reason": "historical continuation gate failed",
-  "selected_width": 32,
-  "status": "STOP"
-}

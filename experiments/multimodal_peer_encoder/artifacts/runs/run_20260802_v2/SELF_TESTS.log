@@ -1,9 +1,0 @@
-......................................................                   [100%]
-54 passed in 4.94s
-<redacted-user-home>/Library/Python/3.13/lib/python/site-packages/requests/__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (6.0.0.post1)/charset_normalizer (3.4.4) doesn't match a supported version!
-  warnings.warn(
-
-S1 PASS: feature_orders=37740; aligned_fixture_orders=800; pre_gate_ndcg_checks=24; no_H8_H13_access
-S2 PASS: synthetic head learnability suite, including second-step H-A gradient
-S3 PASS: modern subtree request rejected before filesystem open
-S4 PASS: generator decimal-literal grep=0; artifact substitution suite=PASS

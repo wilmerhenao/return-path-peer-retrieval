@@ -1,3 +1,0 @@
-# The experiment reuses the paper's exact core and frozen-encoder environment.
--r ../../environment/models.lock
-pytest==9.0.2

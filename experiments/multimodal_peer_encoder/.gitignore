@@ -1,8 +1,0 @@
-__pycache__/
-.pytest_cache/
-artifacts/historical_text_cache/
-artifacts/runs/*/checkpoints/
-artifacts/runs/*/training_history/
-!artifacts/runs/run_20260802_v2/training_history/
-!artifacts/runs/run_20260802_v2/training_history/**
-*.pyc

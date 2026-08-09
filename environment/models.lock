@@ -1,5 +1,0 @@
-# Install after, or instead of, core.lock for short-context dense encoders.
--r core.lock
-torch==2.11.0
-sentence-transformers==5.3.0
-transformers==5.5.0
