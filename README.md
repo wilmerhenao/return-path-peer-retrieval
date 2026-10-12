@@ -8,9 +8,11 @@ wilmer.henao@invesco.com
 
 The paper studies companies that move together after Fama-French five-factor adjustment. It compares recent residual-return paths with vintage Form 10-K Item 1 text and evaluates retrieved peers using next-period positive residual correlations. Return paths are a strong baseline. Filing text improves retrieval when return history is short; its contribution diminishes with longer histories.
 
+The study spans **February 2020 through January 2026**, including the **COVID-19 crash and the 2022 rate shock**. Its 20 return windows form 19 consecutive window-to-window comparisons: thirteen historical windows cover February 2020 to April 2024, followed by seven modern windows from May 2024 to January 2026. The retrospective candidate panel contains 2,200 securities; the eligible sample varies with each comparison's return-history and filing requirements.
+
 ## Results
 
-The primary comparison covers six transitions from 2024 to 2026, with 1,614 to 1,631 eligible companies per transition. NDCG@5 measures retrieval quality among each query's first five peers, using positive next-period residual correlation as relevance. Values are mean NDCG@5 ± population standard deviation across the six transition means.
+The table below reports the primary comparison on the **six modern transitions from 2024 to 2026**, with 1,614 to 1,631 eligible companies per transition. NDCG@5 measures retrieval quality among each query's first five peers, using positive next-period residual correlation as relevance. Values are mean NDCG@5 ± population standard deviation across the six transition means.
 
 | Representation | NDCG@5 |
 | --- | ---: |
@@ -20,6 +22,8 @@ The primary comparison covers six transitions from 2024 to 2026, with 1,614 to 1
 | Frozen 80% return / 20% TF-IDF rank blend | 0.373 ± 0.008 |
 
 The TF-IDF configuration and blend weight were selected on twelve earlier transitions and held fixed for modern evaluation. The blend improves on the one-period path in all six tests. With four periods of return history, adding text gives no improvement; that comparison uses a separate common set of eligible companies.
+
+The historical extension compares return paths with TF-IDF across the full 19-transition panel, including the twelve transitions used for configuration selection. The return path leads in 18 of 19 transitions, with mean NDCG@5 of 0.364, versus 0.318 for TF-IDF. These full-panel means summarize different periods and eligible samples from the modern comparison above.
 
 The study evaluates behavioral peers in a retrospective U.S. cohort. It does not evaluate valuation peers or trading performance. “Full stored excerpt” refers to the collected, capped filing text rather than the complete Item 1 section.
 
