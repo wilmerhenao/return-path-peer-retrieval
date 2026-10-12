@@ -108,19 +108,9 @@ python scripts/run_pairwise_alignment.py --help
 
 The SEC collector requires a descriptive user agent through `--sec-user-agent` or `SEC_USER_AGENT`. Analysis runners record input hashes and write to new output directories. The follow-up runner also checks expected outcomes for the original benchmark sample. Embedding-cache reuse requires matching inputs, model files and device settings; `--force` rebuilds an existing cache.
 
-## Citation
+## Software citation
 
-Software citation metadata is available in [CITATION.cff](CITATION.cff). The accompanying paper can be cited as:
-
-```bibtex
-@misc{henao2026textreturnpath,
-  author = {Henao, Wilmer E.},
-  title = {When Text Complements the Return Path: A Strong Baseline for Behavioral Equity-Peer Retrieval},
-  year = {2026},
-  note = {Accepted for ICAIF 2026},
-  url = {https://github.com/wilmerhenao/return-path-peer-retrieval}
-}
-```
+Software citation metadata is available in [CITATION.cff](CITATION.cff).
 
 ## License
 

@@ -1,5 +1,5 @@
 cff-version: "1.2.0"
-message: "If you use this software, please cite it and the accompanying ICAIF 2026 paper listed in the README."
+message: "If you use this software, please cite it using the metadata in this file."
 type: software
 title: "Return-path peer retrieval"
 authors:
