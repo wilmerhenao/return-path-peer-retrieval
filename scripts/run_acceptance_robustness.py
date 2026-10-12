@@ -22,6 +22,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import platform
 import re
 import subprocess
@@ -217,7 +218,11 @@ def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
 
 
 def relative(path: Path) -> str:
-    return str(path.resolve().relative_to(PROJECT_ROOT.resolve()))
+    absolute_path = Path(os.path.abspath(path))
+    try:
+        return absolute_path.relative_to(Path(os.path.abspath(PROJECT_ROOT))).as_posix()
+    except ValueError:
+        return f"external/{absolute_path.name}"
 
 
 def window_directory(name: str) -> Path:

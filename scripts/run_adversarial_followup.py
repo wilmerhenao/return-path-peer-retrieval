@@ -445,9 +445,6 @@ def input_paths() -> list[Path]:
         Path(__file__).resolve(),
         ROOT / "scripts" / "run_acceptance_robustness.py",
         ROOT / "scripts" / "metrics.py",
-        ROOT / "scripts" / "exp_vintage_all_encoders.py",
-        ROOT / "src" / "s01_universe.py",
-        ROOT / "src" / "config.py",
         ROOT / "data" / "universe.parquet",
     }
     for name in SEQUENCE:
@@ -467,6 +464,14 @@ def input_paths() -> list[Path]:
     missing = sorted(str(path) for path in paths if not path.is_file())
     if missing:
         raise FileNotFoundError(f"missing follow-up inputs: {missing}")
+    # These upstream generators are not imported when scoring cached inputs.
+    # Record their current bytes when available; they are not run dependencies.
+    upstream_sources = (
+        ROOT / "scripts" / "exp_vintage_all_encoders.py",
+        ROOT / "src" / "s01_universe.py",
+        ROOT / "src" / "config.py",
+    )
+    paths.update(path for path in upstream_sources if path.is_file())
     return sorted(paths, key=lambda path: logical_relative(path))
 
 

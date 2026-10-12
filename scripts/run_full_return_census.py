@@ -22,6 +22,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import platform
 import statistics
 import sys
@@ -67,9 +68,12 @@ def sha256_file(path: Path) -> str:
 
 
 def logical_path(path: Path) -> str:
-    # Record project-relative paths, keeping symlink targets on this machine
-    # out of the provenance files.
-    return path.absolute().relative_to(ROOT.absolute()).as_posix()
+    # Keep local directories and symlink targets out of provenance labels.
+    absolute_path = Path(os.path.abspath(path))
+    try:
+        return absolute_path.relative_to(Path(os.path.abspath(ROOT))).as_posix()
+    except ValueError:
+        return f"external/{absolute_path.name}"
 
 
 def load_window(name: str) -> dict[str, Any]:

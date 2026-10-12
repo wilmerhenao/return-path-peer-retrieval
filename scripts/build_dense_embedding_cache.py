@@ -10,8 +10,7 @@ Inputs
 ``results/windows_v3/W*/universe.parquet`` supplies the row order.
 ``results/vintage_descriptions/W*_descriptions.parquet`` supplies filing text,
 source, and filing date. Local model snapshots go beneath ``models/``.
-The original study's ``artifact_release/DATA.md`` records model repository
-identifiers; that file is not included in this release.
+``MODEL_CONFIGS`` lists the snapshot directory names and token limits.
 
 Protocol
 --------
@@ -24,12 +23,13 @@ were upcast to float32 before inference.
 Outputs
 -------
 Each ``.npy`` file has shape ``(N_window, embedding_dimension)`` and follows
-the window's ticker order. Its filename depends on the text, model, and
-configuration, so changing these inputs produces a different cache key.
-``cache_manifest.json`` records model-file and input hashes.
+the window's ticker order. The filename includes the text, ticker order,
+token limit, and primary weight-file hash. ``cache_manifest.json`` records
+model-file and input hashes. Reusing a cache also requires a matching model,
+device, input files, and cached-file checksum in the previous manifest.
 
-Rows without an eligible filing are zero and are excluded from feature-time
-text experiments. Different devices can produce small floating-point
+Securities without an eligible filing are excluded from feature-time text
+experiments. Different devices can produce small floating-point
 differences; use ``--device cpu`` to match the recorded setup.
 """
 
@@ -44,7 +44,7 @@ import sys
 import time
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, NoReturn
 
 import numpy as np
 import polars as pl
@@ -214,6 +214,65 @@ def cache_key(
     return digest.hexdigest()[:16]
 
 
+def validate_cache_reuse(
+    path: Path,
+    *,
+    previous_manifest: dict[str, Any] | None,
+    method: str,
+    model_record: dict[str, Any],
+    input_hashes: dict[str, str],
+    device: str,
+    n_rows: int,
+) -> np.ndarray:
+    """Check a saved cache against its recorded model, inputs, and checksum."""
+
+    def refuse(reason: str) -> NoReturn:
+        raise ValueError(
+            f"Cannot reuse {path.name}: {reason}. "
+            "Use --force to rebuild it or --output-dir for a new cache directory."
+        )
+
+    if not isinstance(previous_manifest, dict):
+        refuse("cache_manifest.json is missing or unreadable")
+    if previous_manifest.get("schema_version") != "dense-embedding-cache-v1":
+        refuse("the manifest schema is unsupported")
+    if previous_manifest.get("device") != device:
+        refuse("the recorded device differs from the requested device")
+    if previous_manifest.get("cpu_dtype_policy") != CPU_DTYPE_POLICY:
+        refuse("the recorded dtype policy differs")
+    models = previous_manifest.get("models")
+    if not isinstance(models, dict) or models.get(method) != model_record:
+        refuse("the model snapshot or configuration differs")
+    artifacts = previous_manifest.get("artifacts")
+    artifact = artifacts.get(path.name) if isinstance(artifacts, dict) else None
+    if not isinstance(artifact, dict):
+        refuse("the manifest has no entry for this cache")
+    for name, expected_hash in input_hashes.items():
+        if artifact.get(name) != expected_hash:
+            refuse(f"the recorded input hash differs or is missing: {name}")
+    try:
+        current_hash = sha256_file(path)
+    except OSError as exc:
+        refuse(f"the cached file cannot be read ({exc})")
+    if artifact.get("sha256") != current_hash:
+        refuse("the cached file checksum differs")
+    try:
+        embeddings = np.load(path, mmap_mode="r", allow_pickle=False)
+    except (EOFError, OSError, ValueError) as exc:
+        refuse(f"the cached array cannot be read ({exc})")
+    if (
+        embeddings.ndim != 2
+        or embeddings.shape[0] != n_rows
+        or artifact.get("shape") != list(embeddings.shape)
+    ):
+        refuse("the cached shape differs from the manifest or window universe")
+    if embeddings.dtype != np.dtype(np.float32):
+        refuse("the cached array is not float32")
+    if not np.isfinite(embeddings).all():
+        refuse("the cached array contains non-finite values")
+    return embeddings
+
+
 def load_sentence_transformer(
     model_dir: Path,
     *,
@@ -325,6 +384,13 @@ def main() -> int:
         )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = args.output_dir / "cache_manifest.json"
+    previous_manifest = None
+    if manifest_path.is_file():
+        try:
+            previous_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            pass
     prepared_inputs = {
         window: window_inputs(window) for window in selected_windows
     }
@@ -367,6 +433,14 @@ def main() -> int:
 
         for window in selected_windows:
             tickers, texts, filing_dates = prepared_inputs[window]
+            universe_path = WINDOWS_DIR / window / "universe.parquet"
+            vintage_path = VINTAGE_DIR / f"{window}_descriptions.parquet"
+            meta_path = WINDOWS_DIR / window / "meta.json"
+            input_hashes = {
+                "window_universe_sha256": sha256_file(universe_path),
+                "vintage_text_sha256": sha256_file(vintage_path),
+                "window_meta_sha256": sha256_file(meta_path),
+            }
             key = cache_key(
                 window,
                 method,
@@ -378,9 +452,15 @@ def main() -> int:
             filename = f"{window}_{config['slug']}_{key}.npy"
             output_path = args.output_dir / filename
             if output_path.exists() and not args.force:
-                embeddings = np.load(output_path, mmap_mode="r")
-                if embeddings.shape[0] != len(tickers):
-                    raise ValueError(f"{filename}: row count does not match universe")
+                embeddings = validate_cache_reuse(
+                    output_path,
+                    previous_manifest=previous_manifest,
+                    method=method,
+                    model_record=manifest["models"][method],
+                    input_hashes=input_hashes,
+                    device=args.device,
+                    n_rows=len(tickers),
+                )
                 print(f"reuse {filename}: shape={embeddings.shape}")
             else:
                 started = time.perf_counter()
@@ -394,13 +474,10 @@ def main() -> int:
                     f"wrote {filename}: shape={embeddings.shape}, "
                     f"seconds={time.perf_counter() - started:.1f}"
                 )
-            universe_path = WINDOWS_DIR / window / "universe.parquet"
-            vintage_path = VINTAGE_DIR / f"{window}_descriptions.parquet"
             manifest["artifacts"][filename] = {
                 "sha256": sha256_file(output_path),
                 "shape": list(np.load(output_path, mmap_mode="r").shape),
-                "window_universe_sha256": sha256_file(universe_path),
-                "vintage_text_sha256": sha256_file(vintage_path),
+                **input_hashes,
                 "eligible_filing_count": len(filing_dates),
                 "row_order": f"results/windows_v3/{window}/universe.parquet",
             }
@@ -415,7 +492,6 @@ def main() -> int:
         except ImportError:
             pass
 
-    manifest_path = args.output_dir / "cache_manifest.json"
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

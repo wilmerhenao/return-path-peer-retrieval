@@ -1,51 +1,49 @@
 # Return-path peer retrieval
 
-Research code for **When Text Complements the Return Path: A Strong Baseline for Behavioral Equity-Peer Retrieval**, accepted at ICAIF 2026, paper 820.
+Research code accompanying **When Text Complements the Return Path: A Strong Baseline for Behavioral Equity-Peer Retrieval**, accepted at ICAIF 2026.
 
 **Wilmer E. Henao** · Advanced Engineering, Invesco · New York, USA
 
-Contact: wilmer.henao@invesco.com
+wilmer.henao@invesco.com
 
-Repository: [wilmerhenao/return-path-peer-retrieval](https://github.com/wilmerhenao/return-path-peer-retrieval). Public release is planned by publication.
+The paper studies companies that move together after Fama-French five-factor adjustment. It compares recent residual-return paths with vintage Form 10-K Item 1 text and evaluates retrieved peers using next-period positive residual correlations. Return paths are a strong baseline. Filing text improves retrieval when return history is short; its contribution diminishes with longer histories.
 
-The paper asks which representations retrieve firms that will co-move with a query firm in the next period after Fama–French five-factor adjustment. It compares recent residual-return paths with vintage Form 10-K Item 1 text represented by TF-IDF and frozen dense encoders. A return path is a strong baseline; filing text adds value when return history is short, and its incremental benefit diminishes with longer histories.
+## Results
 
-This repository contains code and tests for part of the study. The table below shows what is included. The manuscript, market data, filing corpora, model weights, embedding caches, and saved results are not included.
+The primary comparison covers six transitions from 2024 to 2026, with 1,614 to 1,631 eligible companies per transition. NDCG@5 measures retrieval quality among each query's first five peers, using positive next-period residual correlation as relevance. Values are mean NDCG@5 ± population standard deviation across the six transition means.
 
-## Results reported in the paper
-
-These are mean NDCG@5 values over the six 2024–2026 transitions on the primary vintage-text comparison universe. They summarize the paper; the inputs and result files needed to reproduce these values are not included here.
-
-| Representation | Mean NDCG@5 |
+| Representation | NDCG@5 |
 | --- | ---: |
-| One-period return path | 0.336 |
-| Vintage Item 1 TF-IDF | 0.300 |
-| Best dense comparator: Granite-r2, full stored excerpt | 0.279 |
-| Historically selected 80% return / 20% TF-IDF percentile-rank blend | 0.373 |
+| One-period return path | 0.336 ± 0.007 |
+| Vintage Item 1 TF-IDF | 0.300 ± 0.010 |
+| Best dense comparator: Granite-r2, full stored excerpt | 0.279 ± 0.006 |
+| Frozen 80% return / 20% TF-IDF rank blend | 0.373 ± 0.008 |
 
-The blend weight and TF-IDF configuration were selected on twelve earlier transitions, then held fixed for the six modern evaluations. The blend improves on the one-period path in all six. With four periods of return history, adding text gives no improvement. That history comparison uses a different common set of eligible firms, so its means are not directly comparable with the table above.
+The TF-IDF configuration and blend weight were selected on twelve earlier transitions and held fixed for modern evaluation. The blend improves on the one-period path in all six tests. With four periods of return history, adding text gives no improvement; that comparison uses a separate common set of eligible companies.
 
-“Full stored excerpt” means the capped text collected by the study, not necessarily all of Item 1. The included dense-cache builder implements short-context encodings and does not reproduce the full-excerpt Granite result. The tested setting is a retrospective U.S. cohort; these findings do not establish valuation peers, trading performance, or retrieval for companies without observed return histories.
+The study evaluates behavioral peers in a retrospective U.S. cohort. It does not evaluate valuation peers or trading performance. “Full stored excerpt” refers to the collected, capped filing text rather than the complete Item 1 section.
 
-## Paper-to-code map
+## Code
 
-| Component | Included implementation |
+| Component | Implementation |
 | --- | --- |
-| Positive-correlation NDCG, self-exclusion, deterministic ties | [scripts/metrics.py](scripts/metrics.py) |
-| Complete-case return windows, FF5 residuals, standardized paths and correlation targets | [scripts/build_windows.py](scripts/build_windows.py) |
-| Pre-window Item 1 collection and extraction | [scripts/fetch_vintage_10k.py](scripts/fetch_vintage_10k.py), [scripts/sec_filing_text.py](scripts/sec_filing_text.py) |
-| Frozen short-context text embeddings | [scripts/build_dense_embedding_cache.py](scripts/build_dense_embedding_cache.py): MiniLM uses 128 tokens; the other released model configurations use 512 |
-| Historical TF-IDF/rank-blend selection and modern evaluation | [scripts/run_acceptance_robustness.py](scripts/run_acceptance_robustness.py) |
-| Stale returns, path-only history length, and short-context dense follow-up | [scripts/run_adversarial_followup.py](scripts/run_adversarial_followup.py) |
-| Return-path, spectral, SIC-2 and random baseline census | [scripts/run_full_return_census.py](scripts/run_full_return_census.py) |
-| Contemporaneous text and W1/W2 pairwise alignment diagnostics | [scripts/run_same_window_text_diagnostic.py](scripts/run_same_window_text_diagnostic.py), [scripts/run_pairwise_alignment.py](scripts/run_pairwise_alignment.py) |
-| Geometry, metric, window and filing-extraction checks | [tests/](tests/) |
+| Positive-correlation NDCG, query exclusion and deterministic ties | [metrics.py](scripts/metrics.py) |
+| Complete-case windows, Fama-French five-factor residuals and correlation targets | [build_windows.py](scripts/build_windows.py) |
+| Pre-window Item 1 collection and extraction | [fetch_vintage_10k.py](scripts/fetch_vintage_10k.py), [sec_filing_text.py](scripts/sec_filing_text.py) |
+| Frozen short-context embeddings: MiniLM at 128 tokens; BGE, SEC-BERT and Granite-r2 at 512 | [build_dense_embedding_cache.py](scripts/build_dense_embedding_cache.py) |
+| Historical TF-IDF and rank-blend selection; modern evaluation | [run_acceptance_robustness.py](scripts/run_acceptance_robustness.py) |
+| Stale returns, return-history length and short-context dense comparisons | [run_adversarial_followup.py](scripts/run_adversarial_followup.py) |
+| Return-path, spectral-dot, SIC-2 and random baselines | [run_full_return_census.py](scripts/run_full_return_census.py) |
+| Contemporaneous text and W1/W2 pairwise alignment | [run_same_window_text_diagnostic.py](scripts/run_same_window_text_diagnostic.py), [run_pairwise_alignment.py](scripts/run_pairwise_alignment.py) |
+| Geometry, metrics, window construction, filing extraction and input provenance | [tests/](tests/) |
 
-Some analyses in the paper have no runner in this release: full-excerpt Granite encoding, the fixed-list application audit, target-date resampling, the full 19-transition census, the matched-history path/blend comparison and blend-weight selection for each history length, HGB learned fusion, and the multimodal CNN–text encoder. The included history curve uses return paths alone. These scripts cannot reproduce the paper's matched-history fusion table or the other analyses listed here.
+The repository contains source code and tests. It does not distribute the manuscript, market data, filing corpus, model weights, embedding caches or saved results.
+
+Several reported analyses have no runner here: full-excerpt Granite encoding, the fixed-list application audit, target-date resampling, the full 19-transition census, matched-history text fusion and its weight selection, learned HGB fusion, and the multimodal CNN-text encoder. The included history comparison evaluates return paths alone. Reproducing those analyses requires their original inputs and additional code.
 
 ## Installation
 
-Python 3.13.2 was used for the recorded CPU experiments. From this checkout's root:
+The recorded CPU experiments used Python 3.13.2. From the repository root:
 
 ```bash
 python3.13 -m venv .venv
@@ -54,11 +52,11 @@ python -m pip install -r requirements.lock
 python -m unittest discover -s tests -v
 ```
 
-Install the dependencies from `requirements.lock`. Model weights must be obtained separately. The tests use synthetic and local fixtures to check the code; they do not reproduce the paper's empirical tables.
+Model weights are obtained separately. Tests use synthetic and local fixtures; empirical runs require the inputs described below.
 
-### A small return-path example
+### Return-path example
 
-This demonstrates the geometry and query exclusion using synthetic residuals. Each row is one company and each column is a common date. The example does not download data or demonstrate next-period predictive performance.
+Each row below represents one company and each column a common date. The example verifies the same-period correlation identity and retrieves two peers without including the query company.
 
 ```python
 import numpy as np
@@ -78,46 +76,41 @@ peers = top_k_indices(scores[0], k=2, excluded=0, query_seed=0)
 print(peers)
 ```
 
-The equality is a same-period identity: a unit-normalized standardized residual path has an inner product equal to sample residual correlation. Prediction is tested separately by evaluating a feature-period ranking against a later period's positive residual correlations.
+A unit-normalized standardized residual path has an inner product equal to sample residual correlation. The paper tests next-period retrieval separately, by evaluating a feature-period ranking against later residual correlations.
 
-## Inputs required for empirical runs
+## Empirical inputs
 
-| Input | Required role |
+The benchmark runners expect the paper's directory structure, ticker ordering and named caches.
+
+| Input | Contents |
 | --- | --- |
-| `data/universe.parquet` | Unique `ticker` values; `sic` is needed for the SIC-2 baseline |
-| `results/windows_v3/W1/` through `W7/` | Modern residual paths, target matrices, ticker order and metadata |
-| `results/ea_historical/windows/H1/` through `H13/` | Historical configuration-selection inputs |
-| `results/vintage_descriptions/*_descriptions.parquet` | Vintage `ticker`, `source`, `item1_text`, and `filing_date` records |
-| Local model directories and embedding caches | Inputs for the dense-encoder comparisons |
-| Saved historical-selection results and named caches | Dependencies of the follow-up, same-window, and pairwise scripts |
+| `data/universe.parquet` | Unique `ticker` values; `sic` for the SIC-2 baseline |
+| `results/windows_v3/W1/` through `W7/` | Modern residual paths, correlation targets, ticker order and metadata |
+| `results/ea_historical/windows/H1/` through `H13/` | Historical configuration-selection windows |
+| `results/vintage_descriptions/*_descriptions.parquet` | Vintage `ticker`, `source`, `item1_text` and `filing_date` records |
+| Local model directories and embedding caches | Frozen dense-encoder inputs |
+| Saved selection and walk-forward result summaries | Selected settings and reference means used by the same-window and pairwise diagnostics |
 
-The 2,200-name candidate panel was assembled retrospectively using SEC metadata and GDELT coverage. This repository does not contain that SEC-to-GDELT universe-construction workflow. Filing excerpts have an 8,000-character collection cap. The window builder can retrieve fresh Yahoo-derived histories, but vendor revisions and changed source coverage prevent a guarantee of exact reconstruction of the submission's inputs.
+The 2,200-security candidate panel was assembled retrospectively from SEC metadata and GDELT coverage. That universe-construction workflow is not included. Filing collection caps excerpts at 8,000 characters. Fresh price downloads and filing collection can differ from the original inputs because of vendor revisions and changes in source coverage.
 
-Inspect available options before running a stage:
+Each script describes its options through `--help`, for example:
 
 ```bash
 python scripts/build_windows.py --help
 python scripts/fetch_vintage_10k.py --help
 python scripts/build_dense_embedding_cache.py --help
 python scripts/run_acceptance_robustness.py --help
+python scripts/run_adversarial_followup.py --help
 python scripts/run_full_return_census.py --help
 python scripts/run_same_window_text_diagnostic.py --help
 python scripts/run_pairwise_alignment.py --help
 ```
 
-Several scripts use fixed project-relative paths or specific cache identifiers. The same-window and pairwise diagnostics also need saved historical-selection results that are absent from this release. Use `--help` to check their options and required inputs.
-
-`run_adversarial_followup.py` hashes three legacy source files to record which code was used: `scripts/exp_vintage_all_encoders.py`, `src/s01_universe.py`, and `src/config.py`. These files are absent from this release, and the runner raises `FileNotFoundError` without them. Data inputs alone are not enough to run it. Its source shows the calculations, but the checkout lacks those dependencies.
-
-The SEC acquisition driver requires a descriptive user agent supplied through its documented option or environment variable.
-
-Use a new output directory for each run and record the inputs and settings. The paper's numbers come from its saved results. New downloads may produce different values.
+The SEC collector requires a descriptive user agent through `--sec-user-agent` or `SEC_USER_AGENT`. Analysis runners record input hashes and write to new output directories. The follow-up runner also checks expected outcomes for the original benchmark sample. Embedding-cache reuse requires matching inputs, model files and device settings; `--force` rebuilds an existing cache.
 
 ## Citation
 
-If you use this code, cite the software and the accompanying paper. [CITATION.cff](CITATION.cff) contains the software metadata for GitHub's **Cite this repository** panel. No software DOI has been assigned yet.
-
-The paper citation below is provisional. Add the final proceedings metadata and paper DOI when assigned by ACM.
+Software citation metadata is available in [CITATION.cff](CITATION.cff). The accompanying paper can be cited as:
 
 ```bibtex
 @misc{henao2026textreturnpath,
@@ -129,12 +122,6 @@ The paper citation below is provisional. Add the final proceedings metadata and 
 }
 ```
 
-Record the software version or commit used for your run. Once a release is archived on Zenodo, cite that release's DOI. The software DOI and the ACM paper DOI identify different works. The archive will contain the released code, not the omitted data or results.
-
-## Archiving a release
-
-[The release guide](docs/ARCHIVING.md) explains how to archive a reviewed version on Zenodo and obtain a software DOI. This can be done when the repository is ready for public release. If the camera-ready paper needs the DOI sooner, a manual Zenodo draft can reserve one before publication.
-
 ## License
 
-The software in this code-only repository is licensed under [Apache-2.0](LICENSE). Market data, filing text, model weights, and other upstream materials retain their own terms and are not distributed here.
+The software is licensed under [Apache-2.0](LICENSE). Market data, filing text and model weights retain their respective terms and are not distributed here.

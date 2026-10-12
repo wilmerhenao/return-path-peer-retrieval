@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import platform
 import sys
 import time
@@ -69,7 +70,11 @@ def sha256_file(path: Path) -> str:
 
 
 def logical_path(path: Path) -> str:
-    return path.resolve().relative_to(ROOT.resolve()).as_posix()
+    absolute_path = Path(os.path.abspath(path))
+    try:
+        return absolute_path.relative_to(Path(os.path.abspath(ROOT))).as_posix()
+    except ValueError:
+        return f"external/{sha256_file(absolute_path)[:16]}/{absolute_path.name}"
 
 
 def load_tfidf_config(path: Path) -> dict[str, Any]:
@@ -89,6 +94,36 @@ def load_tfidf_config(path: Path) -> dict[str, Any]:
     if isinstance(kwargs.get("ngram_range"), list):
         kwargs["ngram_range"] = tuple(kwargs["ngram_range"])
     return {"config_id": selected["config_id"], "kwargs": kwargs}
+
+
+def collect_input_paths(
+    selection_path: Path,
+    dense_paths: dict[str, Path],
+) -> list[Path]:
+    """List and check the files whose hashes are recorded for this run."""
+    paths = [
+        selection_path,
+        ROOT / "scripts" / "metrics.py",
+        ROOT / "scripts" / "run_acceptance_robustness.py",
+        Path(__file__).resolve(),
+        core.window_directory("W1") / "corr_target.npy",
+        core.window_directory("W1") / "ts_features.npy",
+        core.window_directory("W1") / "universe.parquet",
+        core.window_directory("W1") / "meta.json",
+        core.window_directory("W2") / "corr_target.npy",
+        core.window_directory("W2") / "ts_features.npy",
+        core.window_directory("W2") / "universe.parquet",
+        core.window_directory("W2") / "meta.json",
+        core.VINTAGE_DIR / "W1_descriptions.parquet",
+        *dense_paths.values(),
+    ]
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(
+            "missing pairwise-alignment inputs: "
+            + ", ".join(str(path) for path in missing)
+        )
+    return paths
 
 
 def main() -> int:
@@ -197,27 +232,7 @@ def main() -> int:
             "cache_file": logical_path(path),
         }
 
-    input_paths = [
-        selection_path,
-        ROOT / "scripts" / "metrics.py",
-        ROOT / "scripts" / "run_acceptance_robustness.py",
-        Path(__file__).resolve(),
-        core.window_directory("W1") / "corr_target.npy",
-        core.window_directory("W1") / "ts_features.npy",
-        core.window_directory("W1") / "universe.parquet",
-        core.window_directory("W1") / "meta.json",
-        core.window_directory("W2") / "corr_target.npy",
-        core.window_directory("W2") / "universe.parquet",
-        core.window_directory("W2") / "meta.json",
-        core.VINTAGE_DIR / "W1_descriptions.parquet",
-        *dense_paths.values(),
-    ]
-    missing = [path for path in input_paths if not path.is_file()]
-    if missing:
-        raise FileNotFoundError(
-            "missing pairwise-alignment inputs: "
-            + ", ".join(str(path) for path in missing)
-        )
+    input_paths = collect_input_paths(selection_path, dense_paths)
 
     payload = {
         "schema_version": SCHEMA_VERSION,

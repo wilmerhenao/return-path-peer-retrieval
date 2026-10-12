@@ -241,9 +241,9 @@ def extract_primary_document(sgml: str) -> str:
 def extract_item1(raw: str, *, character_cap: int = MAX_ITEM1_CHARS) -> str | None:
     """Extract the longest plausible Item 1 body and apply the collection cap.
 
-    Multiple Item 1 headers are common because filings contain a table of
-    contents. Candidates ending fewer than 500 characters after the header are
-    treated as table entries. The longest remaining candidate is retained.
+    Multiple Item 1 headers are common in tables of contents. Search for an
+    ending only after 500 characters past the header. Keep candidates at least
+    100 characters long, cap each one, then choose the longest.
     """
     if "<DOCUMENT>" in raw[:10000].upper():
         raw = extract_primary_document(raw)

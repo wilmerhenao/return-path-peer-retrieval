@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import platform
 import statistics
 import sys
@@ -76,8 +77,12 @@ def sha256_file(path: Path) -> str:
 
 
 def logical_path(path: Path) -> str:
-    """Return a project-relative path without recording this machine's paths."""
-    return path.resolve().relative_to(ROOT.resolve()).as_posix()
+    """Label local inputs without exposing workstation directories."""
+    absolute_path = Path(os.path.abspath(path))
+    try:
+        return absolute_path.relative_to(Path(os.path.abspath(ROOT))).as_posix()
+    except ValueError:
+        return f"external/{sha256_file(absolute_path)[:16]}/{absolute_path.name}"
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -161,6 +166,7 @@ def input_paths(
         wf_dense_path,
         ROOT / "scripts" / "metrics.py",
         ROOT / "scripts" / "run_acceptance_robustness.py",
+        ROOT / "scripts" / "run_adversarial_followup.py",
         Path(__file__).resolve(),
     }
     for wt, wt1 in core.MODERN_TRANSITIONS:
@@ -168,9 +174,8 @@ def input_paths(
             directory = core.window_directory(window_name)
             paths.add(directory / "universe.parquet")
             paths.add(directory / "meta.json")
-        feature_directory = core.window_directory(wt)
-        paths.add(feature_directory / "corr_target.npy")
-        paths.add(feature_directory / "ts_features.npy")
+            paths.add(directory / "corr_target.npy")
+            paths.add(directory / "ts_features.npy")
         paths.add(core.VINTAGE_DIR / f"{wt}_descriptions.parquet")
         for method in ("Granite-r2 (512 tok.)", "MiniLM"):
             paths.add(CACHE_DIR / DENSE_CACHE_FILES[wt][method])

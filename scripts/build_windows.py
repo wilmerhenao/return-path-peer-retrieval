@@ -393,7 +393,6 @@ def build_window(
         print(f"  {name}: already built ({meta['N']} tickers, {start}–{end}); skipping")
         return meta
 
-    out_dir.mkdir(parents=True, exist_ok=True)
     print(f"\n  Building {name}: {start} → {end}")
 
     # Filter prices to universe tickers
@@ -414,10 +413,14 @@ def build_window(
     T = resid_matrix.shape[1] if N > 0 else 0
     print(f"    N={N} valid tickers, T={T} days, LW shrinkage={shrinkage:.3f}")
 
-    if N < 100:
-        print(f"    [WARN] Only {N} tickers; window may be too sparse")
+    if N < 100 or T < MIN_VALID:
+        raise ValueError(
+            f"Cannot build {name}: N={N}, T={T}; the paper window policy "
+            f"requires at least 100 complete tickers and {MIN_VALID} trading days."
+        )
 
     # Save
+    out_dir.mkdir(parents=True, exist_ok=True)
     np.save(out_dir / "ts_features.npy", resid_matrix.astype(np.float32))
     np.save(out_dir / "raw_resid.npy", raw_resid_matrix.astype(np.float32))
     np.save(out_dir / "corr_target.npy", corr_lw.astype(np.float32))

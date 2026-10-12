@@ -1,13 +1,18 @@
 """Tests for the return-window construction used in the paper."""
 
 import unittest
-from datetime import date
+from contextlib import redirect_stdout
+from datetime import date, timedelta
+from io import StringIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import numpy as np
 import polars as pl
 
 from scripts.build_windows import (
     WINDOWS,
+    build_window,
     compute_ff5_residuals,
     simple_returns,
     validate_windows,
@@ -119,6 +124,25 @@ class WindowTests(unittest.TestCase):
                 min_days=2,
                 missing_policy="observed-mean",
             )
+
+    def test_empty_window_fails_before_writing_artifacts(self):
+        dates = [date(2025, 1, 2) + timedelta(days=i) for i in range(50)]
+        returns = pl.DataFrame({"date": dates})
+        with TemporaryDirectory() as directory:
+            output = Path(directory)
+            with redirect_stdout(StringIO()), self.assertRaisesRegex(
+                ValueError, "Cannot build EMPTY"
+            ):
+                build_window(
+                    "EMPTY",
+                    dates[0],
+                    dates[-1],
+                    returns,
+                    self._factor_frame(dates),
+                    [],
+                    windows_dir=output,
+                )
+            self.assertEqual(list(output.rglob("*")), [])
 
 
 if __name__ == "__main__":
