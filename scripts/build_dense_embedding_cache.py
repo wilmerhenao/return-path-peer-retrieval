@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 """Build the frozen short-context filing-embedding caches used by the paper.
 
-Research role
--------------
-The dense-encoder comparison treats each model as a fixed feature extractor.
-This stage embeds the vintage Item 1 text available before each modern feature
-window and stores one matrix in the exact order of that window's return
-universe.  Retrieval evaluation occurs in later scripts.
+Each model embeds the Item 1 text available before each modern feature window.
+The saved matrix follows that window's return-universe row order. Later
+scripts evaluate retrieval; this script does not train the models.
 
 Inputs
 ------
 ``results/windows_v3/W*/universe.parquet`` supplies the row order.
 ``results/vintage_descriptions/W*_descriptions.parquet`` supplies filing text,
-source, and filing date.  Local model snapshots are expected beneath
-``models/``; see ``artifact_release/DATA.md`` for repository identifiers.
+source, and filing date. Local model snapshots go beneath ``models/``.
+The original study's ``artifact_release/DATA.md`` records model repository
+identifiers; that file is not included in this release.
 
 Protocol
 --------
@@ -25,17 +23,14 @@ were upcast to float32 before inference.
 
 Outputs
 -------
-Each ``.npy`` file has shape ``(N_window, embedding_dimension)`` and is indexed
-to the adjacent window universe.  A content-derived filename prevents silent
-reuse after text, model, or configuration changes. ``cache_manifest.json``
-records complete model-tree and input hashes.
+Each ``.npy`` file has shape ``(N_window, embedding_dimension)`` and follows
+the window's ticker order. Its filename depends on the text, model, and
+configuration, so changing these inputs produces a different cache key.
+``cache_manifest.json`` records model-file and input hashes.
 
-Interpretation limits
----------------------
-The empty vector rows correspond to securities without an eligible filing and
-are never evaluated by feature-time text experiments. Device-specific kernels
-can cause small floating-point differences, so the reference reproduction uses
-``--device cpu``.
+Rows without an eligible filing are zero and are excluded from feature-time
+text experiments. Different devices can produce small floating-point
+differences; use ``--device cpu`` to match the recorded setup.
 """
 
 from __future__ import annotations
@@ -120,7 +115,7 @@ def sha256_parts(parts: list[str]) -> str:
 
 
 def model_tree_hashes(model_dir: Path) -> tuple[dict[str, str], str]:
-    """Record weights, tokenizer, pooling, and configuration as one snapshot."""
+    """Hash the model's weights, tokenizer, pooling, and configuration files."""
     hashes = {
         path.relative_to(model_dir).as_posix(): sha256_file(path)
         for path in sorted(model_dir.rglob("*"))
@@ -144,7 +139,7 @@ def weight_path(model_dir: Path, candidates: tuple[str, ...]) -> Path:
 
 
 def window_inputs(window: str) -> tuple[list[str], list[str], dict[str, str]]:
-    """Return universe-ordered text after enforcing the vintage timing rule."""
+    """Return text in universe order, keeping filings before the window start."""
     universe_path = WINDOWS_DIR / window / "universe.parquet"
     vintage_path = VINTAGE_DIR / f"{window}_descriptions.parquet"
     meta_path = WINDOWS_DIR / window / "meta.json"

@@ -1,4 +1,4 @@
-"""Tests for the return-window construction contracts used in the paper."""
+"""Tests for the return-window construction used in the paper."""
 
 import unittest
 from datetime import date

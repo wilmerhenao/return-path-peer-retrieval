@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Acquire point-in-time 10-K Item 1 text for all paper windows.
+"""Fetch vintage 10-K Item 1 text for all paper windows.
 
 For each candidate security and feature-window start, the script selects the
 most recent supported annual filing submitted strictly before that date. It
 then extracts Item 1, retains at most 8,000 characters, and writes both the text
-and a metadata trail containing CIK, accession number, canonical SEC URL,
+and metadata containing CIK, accession number, canonical SEC URL,
 filing date, length, and text hash.
 
-This stage is restartable. Completed ticker rows are retained, transient
-request failures are retried, extracted sections are cached by accession, and
-progress is written atomically after each batch. Use a monitored address in
-``--sec-user-agent`` or ``SEC_USER_AGENT``. Never send anonymous or fabricated
-contact information to the SEC.
+Completed ticker rows survive a restart. Failed requests are retried, extracted
+sections are cached by accession, and progress is saved atomically after each
+batch. Use a real, monitored contact address in ``--sec-user-agent`` or
+``SEC_USER_AGENT``.
 """
 
 from __future__ import annotations
@@ -186,8 +185,7 @@ def write_window(
                 f"missing {sorted(missing_columns)}. Use a separate output directory."
             )
         saved = saved.select(list(OUTPUT_SCHEMA)).cast(OUTPUT_SCHEMA)
-        # A request exception is not a completed scientific observation.  Drop
-        # those rows before determining resume state so the next run retries them.
+        # Drop rows with request errors so the next run retries them.
         existing = saved.filter(
             ~pl.col("status").str.starts_with("request_error:")
         )

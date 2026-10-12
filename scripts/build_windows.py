@@ -1,20 +1,20 @@
-"""Construct the modern or historical return windows used in the paper.
+"""Build the modern or historical return windows used in the paper.
 
-The script fetches adjusted prices for a caller-supplied ticker panel, computes
-Fama--French five-factor residuals on a common complete-case date panel, builds
-Ledoit--Wolf correlation targets, and saves per-window artifacts.
+The script fetches adjusted prices for a supplied ticker list, computes
+Fama--French five-factor residuals on dates with complete returns, builds
+Ledoit--Wolf correlation targets, and saves the files for each window.
 
 Output layout:
   results/windows_v3/       (default for ``--window-set modern``)
     W{1-7}/
-      ts_features.npy       (N_w, T_w) — standardized FF5 residuals
-      raw_resid.npy         (N_w, T_w) — unstandardized FF5 residuals
-      corr_target.npy       (N_w, N_w) — LW-shrunk correlation matrix
-      universe.parquet      (N_w, 2)   — ticker/company_idx subset
-      meta.json             — date range, N, shrinkage intensity, provenance
+      ts_features.npy       (N_w, T_w): standardized FF5 residuals
+      raw_resid.npy         (N_w, T_w): unstandardized FF5 residuals
+      corr_target.npy       (N_w, N_w): LW-shrunk correlation matrix
+      universe.parquet      (N_w, 2):   ticker/company_idx subset
+      meta.json             date range, N, shrinkage intensity, provenance
 
 Usage:
-    cd paper_icaif2026
+    cd return-path-peer-retrieval
     python3 scripts/build_windows.py --universe data/universe.parquet \
       --output-dir results/windows_v3 --missing-policy complete
 
@@ -37,7 +37,7 @@ from pathlib import Path
 import numpy as np
 import polars as pl
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
+# Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -45,9 +45,9 @@ DATA_DIR     = PROJECT_ROOT / "data"
 WINDOWS_DIR  = PROJECT_ROOT / "results" / "windows_v3"
 WINDOWS_DIR.mkdir(parents=True, exist_ok=True)
 
-# ── Window definitions ────────────────────────────────────────────────────────
-# Each date interval is inclusive.  Adjacent windows must be strictly disjoint;
-# validate_windows() enforces this before any data are downloaded or written.
+# Window definitions
+# Date intervals include both endpoints. validate_windows() checks for overlap
+# before downloading or writing data.
 MODERN_WINDOWS = [
     ("W1", date(2024, 5,  1), date(2024, 8,  20)),   # May–Aug 2024
     ("W2", date(2024, 8, 21), date(2024, 11, 20)),   # Aug–Nov 2024
@@ -74,7 +74,7 @@ HISTORICAL_WINDOWS = [
     ("H13", date(2024, 1, 2), date(2024, 4, 30)),
 ]
 
-# Backward-compatible import used by the unit tests and older local callers.
+# Keep this alias for the tests and older callers.
 WINDOWS = MODERN_WINDOWS
 
 FF5_URL = (
@@ -82,12 +82,12 @@ FF5_URL = (
     "ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip"
 )
 MIN_VALID  = 45      # minimum trading days in a window to include a ticker
-BATCH_SIZE = 50      # conservative batch size to avoid provider throttling
+BATCH_SIZE = 50      # small batches reduce provider throttling
 MAX_FETCH_ATTEMPTS = 3
 
 
 def validate_windows(windows=WINDOWS) -> None:
-    """Fail fast if window names repeat, dates invert, or windows overlap."""
+    """Reject duplicate names, reversed dates, and overlapping windows."""
     names = [name for name, _, _ in windows]
     if len(names) != len(set(names)):
         raise ValueError("window names must be unique")
@@ -116,7 +116,7 @@ def fetch_ff5(cache_path: Path | None = None, refresh: bool = False) -> pl.DataF
     fname = [n for n in zf.namelist() if n.lower().endswith(".csv")][0]
     raw = zf.read(fname).decode("latin-1")
 
-    # Parse: skip header lines until we hit the data block (lines starting with date)
+    # Skip the header until the first row that starts with a date.
     lines = []
     in_data = False
     for line in raw.splitlines():
@@ -162,7 +162,7 @@ def fetch_prices(
     cache_dir: Path | None = None,
     refresh: bool = False,
 ) -> pl.DataFrame:
-    """Fetch adjusted close prices in restartable, rate-limit-safe batches."""
+    """Fetch adjusted close prices in batches, reusing cached downloads."""
     import pandas as pd
     import yfinance as yf
     from curl_cffi.requests import Session as CurlSession
@@ -278,8 +278,8 @@ def compute_ff5_residuals(
     """Regress each ticker's returns on FF5 factors within ``[start, end]``.
 
     The dependent variable is the stock's simple excess return, R_i - RF.
-    The paper protocol retains only tickers observed on every factor date, so
-    all returned residual series share the same complete date panel.
+    Keep only tickers observed on every factor date, so all residual series
+    share the same dates.
 
     Returns standardized residuals, raw excess-return residuals, tickers,
     shrinkage intensity, the shrunk correlation matrix, and per-ticker
@@ -390,7 +390,7 @@ def build_window(
     if meta_path.exists() and not force:
         with open(meta_path) as f:
             meta = json.load(f)
-        print(f"  {name}: already built ({meta['N']} tickers, {start}–{end}) — skipping")
+        print(f"  {name}: already built ({meta['N']} tickers, {start}–{end}); skipping")
         return meta
 
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -415,7 +415,7 @@ def build_window(
     print(f"    N={N} valid tickers, T={T} days, LW shrinkage={shrinkage:.3f}")
 
     if N < 100:
-        print(f"    [WARN] Only {N} tickers — window may be too sparse")
+        print(f"    [WARN] Only {N} tickers; window may be too sparse")
 
     # Save
     np.save(out_dir / "ts_features.npy", resid_matrix.astype(np.float32))
@@ -457,7 +457,7 @@ def build_window(
 
 
 def verify_window_meta(meta: dict) -> None:
-    """Fail if a saved window contradicts the requested construction policy."""
+    """Check that a saved window matches the requested construction policy."""
     n = int(meta.get("N", 0))
     t = int(meta.get("T", 0))
     if n < 100 or t < MIN_VALID:
@@ -537,7 +537,7 @@ def main():
         refresh=args.refresh_source,
     )
 
-    # Fetch prices — one big pull to avoid redundant downloads
+    # Fetch prices once for the full date range.
     calendar_days = (all_end - all_start).days + 1
     print(
         f"\nFetching prices for {len(universe_tickers)} tickers "
@@ -583,9 +583,9 @@ def main():
         print(f"  {name:<6}  {str(start):<12}  {str(end):<12}  "
               f"{m.get('N', 0):>5}  {m.get('T', 0):>4}  {m.get('lw_shrinkage', 0):>6.3f}")
 
-    # Save a portable summary inside the selected output tree.  Per-window
-    # metadata contain dates, dimensions, estimator details, and data policy;
-    # no repository history or workstation path is required to interpret it.
+    # Save the summary with the windows. Each window's metadata records its
+    # dates, dimensions, estimator, and data policy without relying on local
+    # paths or Git history.
     summary_path = windows_dir / "windows_summary.json"
     with open(summary_path, "w") as f:
         json.dump({k: {kk: vv for kk, vv in v.items() if kk != "valid_tickers"}

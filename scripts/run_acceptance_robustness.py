@@ -1,25 +1,15 @@
-"""Acceptance-oriented robustness suite for the return-path embedding paper.
+"""Check return-path robustness on frozen inputs.
 
-This script is intentionally self-contained and does not modify manuscript or
-legacy result files.  It creates a new, immutable run directory under
-``results/acceptance_robustness/`` on every invocation.
+Every eligible security is a query. Evaluation uses positive-correlation NDCG
+from ``scripts.metrics.ndcg_at_k``, sorted tickers, and seeded tie handling.
+Securities need returns in both W_t and W_{t+1}; filing text must be available
+strictly before W_t starts. TF-IDF and blend settings are selected on H1--H13
+transitions and held fixed for W1--W7.
 
-Protocol invariants
--------------------
-* canonical positive-relevance NDCG from ``scripts.metrics.ndcg_at_k``;
-* deterministic canonical tie handling and lexicographically sorted tickers;
-* census evaluation (every eligible security is a query);
-* return availability in both W_t and W_{t+1};
-* vintage 10-K Item 1 text available strictly before W_t only;
-* TF-IDF and blend hyperparameters selected on H1--H13 transitions only, then
-  frozen before evaluating W1--W7.
-
-Outputs
--------
-Seven self-contained JSON bundles, an artifact manifest, and SHA256SUMS.txt are
-written beneath a versioned run directory.  Each experiment bundle contains its
-exact configuration, all per-transition rows, a summary, runtimes, validation
-checks, and SHA-256 input provenance.
+Each run writes seven JSON files, a manifest, and SHA256SUMS.txt to a new
+directory under ``results/acceptance_robustness/``. The JSON files record
+settings, transition results, summaries, runtimes, checks, and input hashes.
+Existing manuscript and result files are left intact.
 
 Run from the project root:
 
@@ -84,8 +74,8 @@ PREVIOUS_WINDOW = {
     "W6": "W5",
 }
 
-# These are the six configurations in scripts/gate_d_tfidf_sweep.py.  Configs
-# a and e are deliberately identical because that is part of the existing grid.
+# Keep the six labels from scripts/gate_d_tfidf_sweep.py, including the
+# duplicate settings for a and e.
 TFIDF_CONFIGS: tuple[dict[str, Any], ...] = (
     {
         "config_id": "a",
@@ -286,7 +276,7 @@ def load_window(name: str) -> WindowData:
 
 
 def load_vintage_text_map(name: str) -> dict[str, tuple[str, str]]:
-    """Return feature-time 10-K text and filing date, enforcing vintage timing."""
+    """Load 10-K text and check that each filing predates the feature window."""
     window = load_window(name)
     path = VINTAGE_DIR / f"{name}_descriptions.parquet"
     if not path.exists():
@@ -327,7 +317,7 @@ def build_transition(
     *,
     universe_policy: str = "feature_time",
 ) -> TransitionData:
-    """Build one causal transition on the requested text-coverage universe."""
+    """Align returns and vintage text for one transition."""
     if universe_policy not in {"feature_time", "symmetric"}:
         raise ValueError(f"unsupported universe policy: {universe_policy}")
     feature = load_window(wt)
@@ -336,9 +326,8 @@ def build_transition(
 
     eligible = set(feature.tickers) & set(target.tickers) & set(text_t)
     if universe_policy == "symmetric":
-        # Used only for the requested reconciliation.  Target-window text
-        # content is never used as a feature; its coverage set defines the
-        # historical symmetric-universe convention.
+        # This comparison reproduces the older symmetric eligibility rule.
+        # Only target-window text availability is used, never its content.
         text_t1 = load_vintage_text_map(wt1)
         eligible &= set(text_t1)
 
@@ -395,11 +384,10 @@ def return_path_scores(ts_feature: np.ndarray) -> np.ndarray:
 def ewma_return_path_scores(
     ts_feature: np.ndarray, half_life: int
 ) -> np.ndarray:
-    """Apply fixed square-root EWMA weights to the existing return path.
+    """Apply fixed square-root EWMA weights to the standardized return path.
 
-    The input residual path is already standardized with an OLS intercept.  We
-    therefore do not re-estimate or re-center it; the only change is the
-    predeclared recency weighting followed by row L2 normalization.
+    The residuals already come from an OLS fit with an intercept. Keep that fit
+    and centering, apply the fixed recency weights, then L2-normalize each row.
     """
     if half_life <= 0:
         raise ValueError("half_life must be positive")
@@ -446,7 +434,7 @@ def evaluate_scores(
     k: int,
     oracle_check: bool = False,
 ) -> dict[str, Any]:
-    """Evaluate every row as a query through the canonical scorer."""
+    """Score every row as a query using the shared NDCG implementation."""
     if scores.shape != realized.shape:
         raise AssertionError("score/relevance shape mismatch")
     n = scores.shape[0]
@@ -497,14 +485,14 @@ def evaluate_scores(
 
 
 def average_rank_matrix(scores: np.ndarray) -> np.ndarray:
-    """Per-query average percentile ranks with deterministic exact-tie handling."""
+    """Convert scores to per-query percentile ranks, averaging exact ties."""
     validate_score_matrix(scores, "rank input")
     n = scores.shape[0]
     work = np.asarray(scores, dtype=np.float64).copy()
     np.fill_diagonal(work, -np.inf)
     ranks = rankdata(work, axis=1, method="average")
-    # Self has rank 1.  Eligible rows occupy ranks [2,N], with exact ties
-    # receiving their deterministic average rank.
+    # The excluded query has rank 1; candidates occupy ranks [2,N].
+    # Exact ties receive their average rank.
     ranks = (ranks - 1.0) / float(n - 1)
     np.fill_diagonal(ranks, 0.0)
     return ranks.astype(np.float32)
@@ -523,7 +511,7 @@ def population_std(values: list[float]) -> float:
 
 
 def validation_oracles() -> dict[str, Any]:
-    """Small deterministic checks that fail before expensive experiments."""
+    """Check the metric and configuration grid before running experiments."""
     realized = np.array([1.0, 0.8, 0.4, 0.2, -0.5, -0.2], dtype=float)
     oracle = ndcg_at_k(realized, realized, 0, k=3)
     if oracle is None or not math.isclose(oracle, 1.0, abs_tol=1e-12):
@@ -543,7 +531,7 @@ def validation_oracles() -> dict[str, Any]:
     if tie_1 != tie_2:
         raise AssertionError("canonical tie handling is not deterministic")
 
-    # The duplicate existing grid entries must remain exactly identical.
+    # The duplicate a/e settings must stay identical.
     config_a = next(c for c in TFIDF_CONFIGS if c["config_id"] == "a")
     config_e = next(c for c in TFIDF_CONFIGS if c["config_id"] == "e")
     if config_a["kwargs"] != config_e["kwargs"]:
@@ -727,7 +715,7 @@ def run_tfidf_historical_tuning(
                 }
             )
 
-        # Assert the deliberate a/e duplicate produces exact output.
+        # The duplicate a/e settings should produce identical results.
         a_row = next(
             r for r in rows
             if r["transition"] == td.label and r["config_id"] == "a"
@@ -760,7 +748,7 @@ def run_tfidf_historical_tuning(
             }
         )
 
-    # Conservative deterministic tie policy: alphabetical config id.
+    # Break selection ties by alphabetical config id.
     winner_row = sorted(
         aggregate_rows,
         key=lambda r: (-float(r["macro_mean_ndcg"]), str(r["config_id"])),
@@ -890,7 +878,7 @@ def run_blend_tuning_and_modern(
             }
         )
 
-    # Conservative tie policy: favor more weight on the standalone ReturnPath.
+    # Break selection ties in favor of the larger return-path weight.
     selected = sorted(
         alpha_aggregates,
         key=lambda r: (
@@ -1524,7 +1512,7 @@ def main() -> None:
     args = parse_args()
     overall_start = time.perf_counter()
     run_dir = create_run_directory(args.output_root, args.run_id)
-    print(f"Acceptance robustness suite: {SCHEMA_VERSION}")
+    print(f"Return-path robustness checks: {SCHEMA_VERSION}")
     print(f"Output directory: {run_dir}")
 
     validations = validation_oracles()

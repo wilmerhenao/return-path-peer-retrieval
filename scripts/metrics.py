@@ -1,9 +1,8 @@
 """Canonical retrieval metrics for the ICAIF 2026 experiments.
 
-All active paper experiments must import NDCG from this module.  Relevance is
-defined as positive realized correlation: both the retrieved and ideal lists
-therefore use ``max(0, relevance)``.  Query members are excluded from both
-lists, and score ties are broken deterministically.
+Use this NDCG implementation for the paper experiments. Both the retrieved
+and ideal lists use ``max(0, relevance)``: negative realized correlations
+count as zero. Exclude the query from both lists and break ties deterministically.
 """
 
 from __future__ import annotations
@@ -101,6 +100,6 @@ def ndcg_at_k(
     retrieved = top_k_indices(values, k, excluded=query, query_seed=seed)
     retrieved_relevance = np.maximum(realized[retrieved], 0.0)
     score = dcg(retrieved_relevance) / ideal_dcg
-    # Numerical noise must not create a score outside the metric's range.
+    # Keep rounding error from pushing the score outside [0, 1].
     return float(np.clip(score, 0.0, 1.0))
 

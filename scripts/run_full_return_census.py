@@ -1,31 +1,19 @@
 #!/usr/bin/env python3
-"""Reproduce the full-return-universe baselines in Table 2.
+"""Compare return-path, spectral, SIC-2, and random retrieval without text filtering.
 
-Research question
------------------
-How do direct return-path retrieval, a rank-128 spectral approximation, coarse
-two-digit SIC membership, and random retrieval compare when filing coverage is
-not an eligibility requirement?
+For each modern transition, align feature-window paths and correlations with
+next-window correlations by ticker. Every security with complete returns in
+both windows is a query. The frozen candidate table supplies SIC codes.
 
-Inputs
-------
-For each modern transition, the feature-window standardized residual paths and
-Ledoit--Wolf correlation matrix are aligned with the next-window correlation
-matrix by ticker. The frozen candidate table supplies two-digit SIC codes.
+Return-path scores are inner products of row-normalized residual paths.
+Spectral-dot scores use the positive part of the 128 leading eigenpairs of C_t.
+SIC-2 gives equal scores to names sharing the first two SIC digits. Random
+scores use a fixed seed reset for each transition. All methods use the shared
+positive-correlation NDCG@5 metric.
 
-Protocol
---------
-Every security with complete returns in both windows is a query. Return-path
-scores are row-normalized residual-path inner products. Spectral-dot scores use
-the positive part of the 128 leading eigenpairs of C_t. SIC-2 assigns tied
-scores to names sharing the first two SIC digits. Random scores use a fixed
-seed separately within each transition. All methods use canonical positive-
-correlation NDCG@5.
-
-Outputs
--------
-An immutable run directory contains transition-level CSV and JSON, a manifest,
-and SHA-256 checksums. No query-level IID inference is produced.
+Each run writes transition-level CSV and JSON, a manifest, and SHA-256 checksums
+to a new directory. Results are descriptive; no query-level IID inference is
+reported.
 """
 
 from __future__ import annotations
@@ -79,8 +67,8 @@ def sha256_file(path: Path) -> str:
 
 
 def logical_path(path: Path) -> str:
-    # Preserve the project-facing path when a data directory is a local
-    # symlink; resolved workstation targets must never enter provenance.
+    # Record project-relative paths, keeping symlink targets on this machine
+    # out of the provenance files.
     return path.absolute().relative_to(ROOT.absolute()).as_posix()
 
 
@@ -109,8 +97,7 @@ def load_window(name: str) -> dict[str, Any]:
 
 
 def normalized_rows(matrix: np.ndarray) -> np.ndarray:
-    # Preserve the float32 geometry of the frozen arrays.  Upcasting before
-    # normalization changes a small number of near-tied retrieval scores.
+    # Keep float32: upcasting before normalization changes some near-tied scores.
     values = np.asarray(matrix, dtype=np.float32)
     norms = np.linalg.norm(values, axis=1, keepdims=True)
     if np.any(norms <= 0.0):

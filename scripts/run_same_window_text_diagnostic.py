@@ -1,43 +1,21 @@
 #!/usr/bin/env python3
-"""Reproduce the contemporaneous-text diagnostic reported in Section 5.
+"""Score filing-text rankings against correlations from the same period.
 
-Research question
------------------
-Does filing text fail because it cannot forecast next-window residual
-co-movement, or because the frozen representations do not closely describe
-even contemporaneous co-movement?  The diagnostic holds the primary
-feature-time security universe and retrieval metric fixed, but evaluates W_t
-text similarity against the W_t residual-correlation matrix.
+For W1--W6, use the same securities, vintage text, short-context caches, and
+TF-IDF settings as the walk-forward comparison. Filings must predate the
+feature-window start; eligibility still requires returns in W_{t+1}. Load
+the selected TF-IDF settings from the frozen historical tuning result.
 
-Inputs
-------
-For each W1--W6 feature window, the script reads the frozen return-window
-universe and Ledoit--Wolf correlation matrix, the vintage Item 1 text filed
-strictly before the window starts, and the exact short-context embedding cache
-used by the walk-forward experiment.  Eligibility additionally requires
-return availability in W_{t+1}, exactly as in the primary feature-time census.
-The historically selected TF-IDF configuration is loaded from the frozen
-robustness result rather than restated independently.
+Every eligible security is a query. Rank by cosine similarity and score with
+positive-correlation NDCG@5, replacing next-window relevance with W_t
+relevance. Do not fit or tune representations on that target. The return-path
+identity check must give NDCG@5=1 for every query with defined ideal gain.
 
-Protocol
---------
-Every eligible security is a query.  Rankings use cosine similarity and are
-scored by the canonical positive-correlation NDCG@5 implementation.  The
-same-window target is never used to fit, tune, or alter a representation.  The
-return-path identity check must attain NDCG@5=1 for every defined query.
-
-Outputs
--------
-The script creates a new, immutable ``results/same_window_text_diagnostic``
-run directory containing the result JSON, an artifact manifest, and SHA-256
-checksums.  It refuses to overwrite an existing run.
-
-Interpretation limits
----------------------
-This is a descriptive diagnostic, not a deployable forecast or an independent
-pair-level inference exercise.  Its universe is held equal to the walk-forward
-benchmark so that contemporaneous and next-window means differ only in the
-relevance matrix, not in coverage or query sampling.
+Each run writes result JSON, a manifest, and SHA-256 checksums under
+``results/same_window_text_diagnostic`` and refuses to overwrite an existing
+run. This is a descriptive same-period check, not a deployable forecast or
+independent inference. Matching the walk-forward universe keeps coverage and
+query sampling fixed while changing the relevance matrix.
 """
 
 from __future__ import annotations
@@ -89,7 +67,7 @@ METHODS = ("TF-IDF", "Granite-r2 (512 tok.)", "MiniLM")
 
 
 def sha256_file(path: Path) -> str:
-    """Return a streaming SHA-256 digest for one regular file."""
+    """Hash a file in blocks with SHA-256."""
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
@@ -98,7 +76,7 @@ def sha256_file(path: Path) -> str:
 
 
 def logical_path(path: Path) -> str:
-    """Represent project files without recording a workstation path."""
+    """Return a project-relative path without recording this machine's paths."""
     return path.resolve().relative_to(ROOT.resolve()).as_posix()
 
 
@@ -107,7 +85,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def selected_tfidf_config(authority: dict[str, Any]) -> dict[str, Any]:
-    """Load and validate the historical-only TF-IDF selection authority."""
+    """Load and check the TF-IDF settings selected on historical transitions."""
     summary = authority["summary"]
     config = summary["tfidf_config_frozen_from_historical"]
     if config["config_id"] != "b":
@@ -124,7 +102,7 @@ def same_window_target(
     feature: core.WindowData,
     tickers: tuple[str, ...],
 ) -> np.ndarray:
-    """Subset C_t to the already frozen feature-time transition universe."""
+    """Align C_t with the transition's fixed comparison universe."""
     feature_idx = np.fromiter(
         (feature.ticker_to_idx[ticker] for ticker in tickers),
         dtype=np.int64,
@@ -159,7 +137,7 @@ def walk_forward_means(
     robustness: dict[str, Any],
     dense: dict[str, Any],
 ) -> dict[str, float]:
-    """Extract comparator means from the active frozen authorities."""
+    """Read walk-forward means from the frozen result files."""
     return {
         "TF-IDF": float(robustness["summary"]["modern_mean_tfidf_ndcg"]),
         "Granite-r2 (512 tok.)": float(
@@ -177,7 +155,7 @@ def input_paths(
     wf_robustness_path: Path,
     wf_dense_path: Path,
 ) -> list[Path]:
-    """List every scientific input whose identity anchors this rerun."""
+    """List the input files whose hashes are recorded for this run."""
     paths: set[Path] = {
         wf_robustness_path,
         wf_dense_path,
@@ -253,8 +231,8 @@ def main() -> int:
         feature = core.load_window(wt)
         realized_same_window = same_window_target(feature, transition.tickers)
 
-        # The identity check is a protocol invariant: C_t is an affine
-        # off-diagonal transformation of the standardized-path correlation.
+        # C_t rescales off-diagonal standardized-path correlations uniformly,
+        # so positive-relevance NDCG@5 should be 1 in this same-window check.
         return_evaluation = core.evaluate_scores(
             core.return_path_scores(transition.ts_feature),
             realized_same_window,

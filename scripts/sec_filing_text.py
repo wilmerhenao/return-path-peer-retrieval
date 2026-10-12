@@ -1,9 +1,8 @@
 """SEC EDGAR access and Item 1 extraction for the vintage-text pipeline.
 
-The network client follows the SEC fair-access ceiling and identifies the
-researcher through a caller-supplied User-Agent. The text extractor is kept in
-a separate module so it can be unit-tested without making network requests.
-It is a deterministic heuristic, not a general-purpose filing parser.
+The client follows the SEC request limit and uses the researcher's User-Agent.
+Extraction can be tested without network requests. It uses a deterministic
+heuristic, not a general-purpose filing parser.
 """
 
 from __future__ import annotations
@@ -60,11 +59,11 @@ class SecClient:
     Parameters
     ----------
     user_agent:
-        A descriptive value containing a researcher or project name and a
-        monitored contact address, as requested by SEC fair-access guidance.
+        A researcher or project name and a monitored contact address, as
+        requested by SEC fair-access guidance.
     max_requests_per_second:
-        Local request ceiling. The SEC maximum is ten; the package default is
-        deliberately lower to leave room for other traffic from the same host.
+        Local request limit. The SEC maximum is ten; the default is lower to
+        allow other requests from the same host.
     """
 
     def __init__(
@@ -85,9 +84,8 @@ class SecClient:
         self.max_attempts = max_attempts
         self.minimum_interval = 1.0 / max_requests_per_second
         self.last_request = 0.0
-        # One company-submissions scan supplies every historical cutoff.  The
-        # corpus driver asks about twenty windows, so caching compact filing
-        # references avoids repeating the same SEC metadata requests.
+        # Cache each company's filings to avoid fetching its metadata again
+        # for every window cutoff.
         self._annual_filing_cache: dict[int, tuple[FilingReference, ...]] = {}
         self.session = requests.Session()
         self.session.headers.update(
@@ -99,7 +97,7 @@ class SecClient:
         )
 
     def get(self, url: str) -> requests.Response:
-        """Fetch one SEC resource with pacing and retryable-status backoff."""
+        """Space requests and retry temporary HTTP errors when fetching from SEC."""
         for attempt in range(1, self.max_attempts + 1):
             elapsed = time.monotonic() - self.last_request
             if elapsed < self.minimum_interval:
@@ -143,8 +141,8 @@ class SecClient:
             table.get("primaryDocument", []),
         )
         for form, filing_date, accession, primary_document in rows:
-            # Amendments are intentionally excluded because their Item 1 scope
-            # is not comparable with the complete annual filing.
+            # Skip amendments because their Item 1 coverage can differ from
+            # the complete annual filing.
             if form not in SUPPORTED_FORMS:
                 continue
             try:

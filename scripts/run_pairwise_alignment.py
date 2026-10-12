@@ -1,36 +1,18 @@
 #!/usr/bin/env python3
-"""Reproduce the descriptive pairwise-alignment result in Section 6.
+"""Compare W1 text and return-path similarity with W1 and W2 residual correlation.
 
-Research question
------------------
-How strongly do W1 filing-text similarity and W1 residual-return similarity
-rank all unordered security pairs in the same order as W1 and realized W2
-residual correlation?
+Use the W1->W2 comparison universe: returns in both windows and nonempty
+Item 1 text filed strictly before W1 starts. Inputs are the W1 standardized
+paths, W1/W2 Ledoit--Wolf matrices, frozen dense-encoder caches, and the
+historically selected TF-IDF settings from the frozen robustness result.
 
-Inputs
-------
-The script uses the W1->W2 primary feature-time universe: return availability
-in both windows and non-empty Item 1 text filed strictly before W1 begins.  It
-reads the W1 standardized residual paths, the W1 and W2 Ledoit--Wolf target
-matrices, frozen dense-encoder caches, and the historically selected TF-IDF
-configuration from the robustness authority.
+Compute Spearman's rho over every unordered pair, excluding self-pairs.
+Pairs are not subsampled. They share securities and dates, so no IID p-value
+or confidence interval is reported. These coefficients describe one fixed
+sample and measure all-pair alignment, rather than top-k retrieval quality.
 
-Protocol
---------
-TF-IDF, dense-encoder, and return-path cosine similarities are compared with
-W1 and W2 correlation over the complete upper triangle, excluding self-pairs.
-Spearman's rho is computed without pair subsampling.  No p-value or confidence
-interval is reported because pairs share securities and target dates.
-
-Outputs
--------
-An immutable result JSON, artifact manifest, and SHA-256 checksum file are
-written beneath ``results/pairwise_alignment``.
-
-Interpretation limits
----------------------
-The coefficients describe one finite, highly dependent pair panel.  They are
-not IID estimates and are not a substitute for the top-k retrieval metric.
+Each run writes result JSON, a manifest, and SHA-256 checksums to a new
+directory under ``results/pairwise_alignment``.
 """
 
 from __future__ import annotations
@@ -166,8 +148,8 @@ def main() -> int:
     if not np.isfinite([tfidf_rho, return_rho]).all():
         raise AssertionError("non-finite Spearman coefficient")
 
-    # The frozen dense caches are indexed to the complete W1 return universe,
-    # whereas ``transition`` uses the smaller feature-time text universe.
+    # Dense caches follow the full W1 return universe. Reindex them to the
+    # smaller return/text universe used by this transition.
     feature = core.load_window("W1")
     dense_indices = np.fromiter(
         (feature.ticker_to_idx[ticker] for ticker in transition.tickers),
