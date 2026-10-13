@@ -1,5 +1,7 @@
 # Return-path peer retrieval
 
+[![DOI](https://zenodo.org/badge/1327359443.svg)](https://doi.org/10.5281/zenodo.23342563)
+
 Research code accompanying **When Text Complements the Return Path: A Strong Baseline for Behavioral Equity-Peer Retrieval**, accepted at ICAIF 2026.
 
 **Wilmer E. Henao** · Advanced Engineering, Invesco · New York, USA
