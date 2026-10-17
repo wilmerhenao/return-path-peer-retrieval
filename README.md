@@ -25,7 +25,13 @@ The table below reports the primary comparison on the **six modern transitions f
 
 The TF-IDF configuration and blend weight were selected on twelve earlier transitions and held fixed for modern evaluation. The blend improves on the one-period path in all six tests. With four periods of return history, adding text gives no improvement; that comparison uses a separate common set of eligible companies.
 
-The historical extension compares return paths with TF-IDF across the full 19-transition panel, including the twelve transitions used for configuration selection. The return path leads in 18 of 19 transitions, with mean NDCG@5 of 0.364, versus 0.318 for TF-IDF. These full-panel means summarize different periods and eligible samples from the modern comparison above.
+The historical extension compares all three methods on identical eligible queries and candidate sets across 19 transitions: mean NDCG@5 is 0.399 for the frozen blend, 0.364 for the return path, and 0.318 for TF-IDF. **Twelve transitions (H1→H2 through H12→H13) were used for configuration selection; seven (H13→W1 and the six modern transitions) were held out from that selection.** The full-panel and volatility-regime summaries include selection periods and are descriptive. On the seven held-out transitions, the corresponding means are 0.372, 0.335, and 0.300; the blend leads in all seven. The return path leads TF-IDF in 18 of 19 transitions; the exception follows the COVID-19 crash window.
+
+The unchanged blend also leads both standalone methods in all six modern transitions at each depth k = 1, 5, 10, 20 (blend means 0.402, 0.373, 0.360, 0.350). After the ticker-syntax exclusion, the means are 0.362 for the blend, 0.324 for the path, and 0.301 for TF-IDF. This exclusion is a share-class heuristic, not a definitive common-stock screen.
+
+The learned diagnostics use different evaluation periods. Gradient boosting scores 0.308 versus 0.373 for the blend on six modern transitions. The paper's CNN scores 0.377 versus 0.409 for the blend on six historical continuation tests, H7→H8 through H12→H13, and fails its continuation criterion before modern evaluation. Those CNN tests are later than each CNN fit but **inside the twelve periods used to select the blend**. Boosting uses binary top-five labels; the CNN uses graded listwise relevance and frozen Granite-r2 text rather than TF-IDF. These results do not isolate why the tested models underperform.
+
+[Aggregate results and checksums](paper_results/README.md) include transition-level scores and explicit partitions. They can be checked without downloading market data or model weights.
 
 The study evaluates behavioral peers in a retrospective U.S. cohort. It does not evaluate valuation peers or trading performance. “Full stored excerpt” refers to the collected, capped filing text rather than the complete Item 1 section.
 
@@ -41,11 +47,18 @@ The study evaluates behavioral peers in a retrospective U.S. cohort. It does not
 | Stale returns, return-history length and short-context dense comparisons | [run_adversarial_followup.py](scripts/run_adversarial_followup.py) |
 | Return-path, spectral-dot, SIC-2 and random baselines | [run_full_return_census.py](scripts/run_full_return_census.py) |
 | Contemporaneous text and W1/W2 pairwise alignment | [run_same_window_text_diagnostic.py](scripts/run_same_window_text_diagnostic.py), [run_pairwise_alignment.py](scripts/run_pairwise_alignment.py) |
+| Frozen blend across 19 transitions and volatility regimes | [run_full19_frozen_blend.py](scripts/run_full19_frozen_blend.py), [input and provenance guide](docs/frozen_blend.md) |
+| Frozen blend at four retrieval depths and after ticker exclusion | [run_frozen_blend_depth_ticker.py](scripts/run_frozen_blend_depth_ticker.py) |
+| Historical gradient-boosted fusion and modern evaluation | [run_learned_fusion_followup.py](scripts/run_learned_fusion_followup.py), [protocol and inputs](docs/learned_fusion.md) |
+| Paper CNN V1 through its historical continuation decision | [train_historical.py](experiments/multimodal_peer_encoder/train_historical.py), [protocol and inputs](docs/cnn.md) |
+| Published aggregate arithmetic and partition checks | [verify_paper_results.py](scripts/verify_paper_results.py) |
 | Geometry, metrics, window construction, filing extraction and input provenance | [tests/](tests/) |
 
-The repository contains source code and tests. It does not distribute the manuscript, market data, filing corpus, model weights, embedding caches or saved results.
+The repository contains source code, tests, selected aggregate results, and the saved aggregate authorities required by the new frozen-blend checks. It does not distribute the manuscript, market data, filing corpus, model weights, embedding caches, or full original execution archives. The extracts identify their original artifacts by SHA-256; they do not substitute for the original scientific inputs.
 
-Several reported analyses have no runner here: full-excerpt Granite encoding, the fixed-list application audit, target-date resampling, the full 19-transition census, matched-history text fusion and its weight selection, learned HGB fusion, and the multimodal CNN-text encoder. The included history comparison evaluates return paths alone. Reproducing those analyses requires their original inputs and additional code.
+Several reported analyses still have no original runner here: full-excerpt Granite encoding, the fixed-list application audit, target-date resampling, the original standalone 19-transition census, and matched-history text fusion and its weight selection. The new 19-transition blend runner reuses saved historical/modern aggregates and computes the missing bridge; it does not regenerate the standalone census. The included return-history comparison evaluates return paths alone. The public CNN runner ends at its historical continuation decision; no modern continuation or later CNN variants are included.
+
+These additions extend the current repository. The cited **v1.0.0 Zenodo archive remains the original source-only snapshot**; it does not contain the new runners or result extracts.
 
 ## Installation
 
@@ -55,10 +68,10 @@ The recorded CPU experiments used Python 3.13.2. From the repository root:
 python3.13 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.lock
-python -m unittest discover -s tests -v
+python scripts/verify_paper_results.py
 ```
 
-Model weights are obtained separately. Tests use synthetic and local fixtures; empirical runs require the inputs described below.
+For the full suite, including the CNN's synthetic model/cache tests, install `requirements-dev.txt` and run `python -m pytest tests`. Model weights are obtained separately. Tests use synthetic and local fixtures; empirical runs require the inputs described below. The original dependency pins are preserved. The October blend checks also replayed exactly under NumPy 2.4.4; this is recorded in their documentation, not substituted for the original environment.
 
 ### Return-path example
 
@@ -110,6 +123,10 @@ python scripts/run_adversarial_followup.py --help
 python scripts/run_full_return_census.py --help
 python scripts/run_same_window_text_diagnostic.py --help
 python scripts/run_pairwise_alignment.py --help
+python scripts/run_full19_frozen_blend.py --help
+python scripts/run_frozen_blend_depth_ticker.py --help
+python scripts/run_learned_fusion_followup.py --help
+python -m experiments.multimodal_peer_encoder.train_historical --help
 ```
 
 The SEC collector requires a descriptive user agent through `--sec-user-agent` or `SEC_USER_AGENT`. Analysis runners record input hashes and write to new output directories. The follow-up runner also checks expected outcomes for the original benchmark sample. Embedding-cache reuse requires matching inputs, model files and device settings; `--force` rebuilds an existing cache.

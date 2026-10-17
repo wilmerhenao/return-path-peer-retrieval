@@ -1,0 +1,483 @@
+{
+  "configuration": {
+    "alpha_return_path": 0.8,
+    "alpha_tfidf": 0.19999999999999996,
+    "evaluation_transitions": [
+      "W1->W2",
+      "W2->W3",
+      "W3->W4",
+      "W4->W5",
+      "W5->W6",
+      "W6->W7"
+    ],
+    "k_values": [
+      1,
+      5,
+      10,
+      20
+    ],
+    "metric": {
+      "implementation": "scripts.metrics.ndcg_at_k",
+      "name": "canonical positive-relevance NDCG",
+      "primary_k": 5,
+      "query_exclusion": "query security excluded from retrieved and ideal lists",
+      "query_policy": "census: every eligible security",
+      "relevance": "max(0, realized W_{t+1} Ledoit-Wolf residual correlation)",
+      "tie_handling": "canonical seeded jitter with seed TIE_RNG_BASE + sorted query index"
+    },
+    "rank_normalization": "per-query scipy.stats.rankdata(method='average'); exact ties receive equal average ranks; self excluded before ranking",
+    "retuning_performed": false,
+    "selection_transitions": [
+      "H1->H2",
+      "H2->H3",
+      "H3->H4",
+      "H4->H5",
+      "H5->H6",
+      "H6->H7",
+      "H7->H8",
+      "H8->H9",
+      "H9->H10",
+      "H10->H11",
+      "H11->H12",
+      "H12->H13"
+    ],
+    "tfidf": {
+      "config_id": "b",
+      "kwargs": {
+        "max_features": 50000,
+        "min_df": 2,
+        "ngram_range": [
+          1,
+          2
+        ],
+        "stop_words": "english",
+        "strip_accents": "unicode",
+        "sublinear_tf": true
+      }
+    },
+    "ticker_exclusion_heuristic": {
+      "meaning": "exclude ticker symbols ending in dash plus one or two letters; vendor-syntax heuristic for preferred/non-primary share classes, not a definitive security-type master",
+      "regex": "-[A-Z]{1,2}$"
+    },
+    "ticker_refit": "refit frozen-b TF-IDF on each restricted corpus; fully rerank all methods on the same restricted candidate set",
+    "universe": {
+      "current_protocol": "sorted intersection of return availability in W_t and W_{t+1} and non-empty vintage 10-K Item 1 text in W_t only",
+      "target_window_text": "not used except to define the legacy symmetric universe in experiment 7",
+      "text_timing": "source=10K and filing_date strictly before W_t start"
+    }
+  },
+  "depth_per_transition": [
+    {
+      "frozen_blend": 0.39985612488647093,
+      "k": 1,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.35992468001761635,
+      "tfidf": 0.3074092789252721,
+      "transition": "W1->W2"
+    },
+    {
+      "frozen_blend": 0.36527328973909856,
+      "k": 5,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.337330607422797,
+      "tfidf": 0.28643169080715347,
+      "transition": "W1->W2"
+    },
+    {
+      "frozen_blend": 0.3514330288291587,
+      "k": 10,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.3304217727235068,
+      "tfidf": 0.27545130988941663,
+      "transition": "W1->W2"
+    },
+    {
+      "frozen_blend": 0.34326103435123717,
+      "k": 20,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.3266772491304212,
+      "tfidf": 0.26904024342228383,
+      "transition": "W1->W2"
+    },
+    {
+      "frozen_blend": 0.3907301123736476,
+      "k": 1,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.34911409396911947,
+      "tfidf": 0.32118065302574517,
+      "transition": "W2->W3"
+    },
+    {
+      "frozen_blend": 0.36253524710128804,
+      "k": 5,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.3250519866576961,
+      "tfidf": 0.3044559572447844,
+      "transition": "W2->W3"
+    },
+    {
+      "frozen_blend": 0.35020673333284746,
+      "k": 10,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.3187048044610332,
+      "tfidf": 0.2889723388714035,
+      "transition": "W2->W3"
+    },
+    {
+      "frozen_blend": 0.34232987378823293,
+      "k": 20,
+      "n_candidates_per_query": 1613,
+      "n_queries": 1614,
+      "return_path": 0.3172657868615434,
+      "tfidf": 0.2800573155677838,
+      "transition": "W2->W3"
+    },
+    {
+      "frozen_blend": 0.4065670043206123,
+      "k": 1,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.35379601641103564,
+      "tfidf": 0.3188560808810749,
+      "transition": "W3->W4"
+    },
+    {
+      "frozen_blend": 0.382312676732482,
+      "k": 5,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.3324426459712004,
+      "tfidf": 0.3062541733965188,
+      "transition": "W3->W4"
+    },
+    {
+      "frozen_blend": 0.36836487098812754,
+      "k": 10,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.32755938420871955,
+      "tfidf": 0.295581948631402,
+      "transition": "W3->W4"
+    },
+    {
+      "frozen_blend": 0.3574640073377522,
+      "k": 20,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.3239257992031895,
+      "tfidf": 0.2877584182984353,
+      "transition": "W3->W4"
+    },
+    {
+      "frozen_blend": 0.4069426072380736,
+      "k": 1,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.36726886786406016,
+      "tfidf": 0.303770582401688,
+      "transition": "W4->W5"
+    },
+    {
+      "frozen_blend": 0.37900128316296483,
+      "k": 5,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.3477752986714398,
+      "tfidf": 0.2949940629005176,
+      "transition": "W4->W5"
+    },
+    {
+      "frozen_blend": 0.3673727848416909,
+      "k": 10,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.34284135699904134,
+      "tfidf": 0.2847513929555999,
+      "transition": "W4->W5"
+    },
+    {
+      "frozen_blend": 0.358317045726808,
+      "k": 20,
+      "n_candidates_per_query": 1616,
+      "n_queries": 1617,
+      "return_path": 0.34125014356573147,
+      "tfidf": 0.2771086062047706,
+      "transition": "W4->W5"
+    },
+    {
+      "frozen_blend": 0.39607677321653784,
+      "k": 1,
+      "n_candidates_per_query": 1630,
+      "n_queries": 1631,
+      "return_path": 0.34745650548481993,
+      "tfidf": 0.312065697914307,
+      "transition": "W5->W6"
+    },
+    {
+      "frozen_blend": 0.36934203920885844,
+      "k": 5,
+      "n_candidates_per_query": 1630,
+      "n_queries": 1631,
+      "return_path": 0.3331092474640123,
+      "tfidf": 0.292566545889057,
+      "transition": "W5->W6"
+    },
+    {
+      "frozen_blend": 0.35416444721082013,
+      "k": 10,
+      "n_candidates_per_query": 1630,
+      "n_queries": 1631,
+      "return_path": 0.327345385728938,
+      "tfidf": 0.2831789663147625,
+      "transition": "W5->W6"
+    },
+    {
+      "frozen_blend": 0.34602356304798226,
+      "k": 20,
+      "n_candidates_per_query": 1630,
+      "n_queries": 1631,
+      "return_path": 0.32528589764946236,
+      "tfidf": 0.27521887373404774,
+      "transition": "W5->W6"
+    },
+    {
+      "frozen_blend": 0.4133632913714741,
+      "k": 1,
+      "n_candidates_per_query": 1629,
+      "n_queries": 1630,
+      "return_path": 0.3609411502325928,
+      "tfidf": 0.3364231859140379,
+      "transition": "W6->W7"
+    },
+    {
+      "frozen_blend": 0.37934478257244164,
+      "k": 5,
+      "n_candidates_per_query": 1629,
+      "n_queries": 1630,
+      "return_path": 0.33799736893785726,
+      "tfidf": 0.31586209245450103,
+      "transition": "W6->W7"
+    },
+    {
+      "frozen_blend": 0.3656398719763253,
+      "k": 10,
+      "n_candidates_per_query": 1629,
+      "n_queries": 1630,
+      "return_path": 0.32866835684287043,
+      "tfidf": 0.3028434760898237,
+      "transition": "W6->W7"
+    },
+    {
+      "frozen_blend": 0.35246564288208454,
+      "k": 20,
+      "n_candidates_per_query": 1629,
+      "n_queries": 1630,
+      "return_path": 0.32096481608683125,
+      "tfidf": 0.29337852034675577,
+      "transition": "W6->W7"
+    }
+  ],
+  "export_schema": "paper-aggregate-extract-v1",
+  "interpretation": "Descriptive robustness checks on the six original modern transitions with the previously selected configuration and weight. Ticker syntax is a heuristic, not a definitive common-stock classifier; no independent or IID inference is added.",
+  "scope": "Selected aggregate fields copied exactly from the original result; not a new experimental run.",
+  "source": {
+    "artifact_path": "results/frozen_blend_depth_ticker/run_20261016_fixed80_20/frozen_blend_depth_ticker.json",
+    "artifact_sha256": "b010f28e2e3822b9b805b7102d8cca834abc05bfa69d54e41f402e85e5624027",
+    "schema_version": "frozen-blend-depth-ticker-v1",
+    "selected_top_level_fields": [
+      "configuration",
+      "depth_per_transition",
+      "ticker_exclusion_per_transition",
+      "summary",
+      "validations",
+      "interpretation"
+    ]
+  },
+  "summary": {
+    "depth": {
+      "1": {
+        "blend_wins_over_return_path": 6,
+        "blend_wins_over_tfidf": 6,
+        "frozen_blend": {
+          "mean": 0.4022559855678027,
+          "population_sd": 0.007535574486429586
+        },
+        "maximum_blend_minus_return_path": 0.05277098790957668,
+        "mean_blend_minus_return_path": 0.04583909990459533,
+        "minimum_blend_minus_return_path": 0.03967373937401342,
+        "n_transitions": 6,
+        "return_path": {
+          "mean": 0.35641688566320745,
+          "population_sd": 0.006964520130869303
+        },
+        "tfidf": {
+          "mean": 0.31661757984368755,
+          "population_sd": 0.010713327632369502
+        }
+      },
+      "10": {
+        "blend_wins_over_return_path": 6,
+        "blend_wins_over_tfidf": 6,
+        "frozen_blend": {
+          "mean": 0.3595302895298283,
+          "population_sd": 0.007726234040977773
+        },
+        "maximum_blend_minus_return_path": 0.040805486779407985,
+        "mean_blend_minus_return_path": 0.030273446035810114,
+        "minimum_blend_minus_return_path": 0.02101125610565191,
+        "n_transitions": 6,
+        "return_path": {
+          "mean": 0.3292568434940182,
+          "population_sd": 0.007119491442313167
+        },
+        "tfidf": {
+          "mean": 0.2884632387920681,
+          "population_sd": 0.008838722252140883
+        }
+      },
+      "20": {
+        "blend_wins_over_return_path": 6,
+        "blend_wins_over_tfidf": 6,
+        "frozen_blend": {
+          "mean": 0.34997686118901616,
+          "population_sd": 0.0064680932598329575
+        },
+        "maximum_blend_minus_return_path": 0.03353820813456271,
+        "mean_blend_minus_return_path": 0.02408191243948633,
+        "minimum_blend_minus_return_path": 0.016583785220815994,
+        "n_transitions": 6,
+        "return_path": {
+          "mean": 0.32589494874952984,
+          "population_sd": 0.007521204888720505
+        },
+        "tfidf": {
+          "mean": 0.2804269962623462,
+          "population_sd": 0.0080562892831303
+        }
+      },
+      "5": {
+        "blend_wins_over_return_path": 6,
+        "blend_wins_over_tfidf": 6,
+        "frozen_blend": {
+          "mean": 0.3729682197528556,
+          "population_sd": 0.007589305362913143
+        },
+        "maximum_blend_minus_return_path": 0.0498700307612816,
+        "mean_blend_minus_return_path": 0.0373503605653551,
+        "minimum_blend_minus_return_path": 0.027942682316301537,
+        "n_transitions": 6,
+        "return_path": {
+          "mean": 0.3356178591875005,
+          "population_sd": 0.00688490718939461
+        },
+        "tfidf": {
+          "mean": 0.300094087115422,
+          "population_sd": 0.009788920294399438
+        }
+      }
+    },
+    "ticker_exclusion": {
+      "blend_wins_over_return_path": 6,
+      "blend_wins_over_tfidf": 6,
+      "frozen_blend": {
+        "mean": 0.36177430620235324,
+        "population_sd": 0.008866765023268412
+      },
+      "maximum_blend_minus_return_path": 0.04816019038791236,
+      "mean_blend_minus_return_path": 0.03816055261581284,
+      "minimum_blend_minus_return_path": 0.028927888277296865,
+      "n_transitions": 6,
+      "return_path": {
+        "mean": 0.3236137535865404,
+        "population_sd": 0.007161913725336685
+      },
+      "tfidf": {
+        "mean": 0.30103765512406483,
+        "population_sd": 0.011074054530784269
+      }
+    }
+  },
+  "ticker_exclusion_per_transition": [
+    {
+      "frozen_blend": 0.3511599418735058,
+      "k": 5,
+      "n_candidates_per_query": 1495,
+      "n_excluded": 118,
+      "n_queries": 1496,
+      "return_path": 0.32223205359620893,
+      "tfidf": 0.28158551206104393,
+      "transition": "W1->W2",
+      "vocab_size": 50000
+    },
+    {
+      "frozen_blend": 0.35000012083759985,
+      "k": 5,
+      "n_candidates_per_query": 1495,
+      "n_excluded": 118,
+      "n_queries": 1496,
+      "return_path": 0.3125969174512117,
+      "tfidf": 0.3065877757075767,
+      "transition": "W2->W3",
+      "vocab_size": 50000
+    },
+    {
+      "frozen_blend": 0.36785176864236185,
+      "k": 5,
+      "n_candidates_per_query": 1498,
+      "n_excluded": 118,
+      "n_queries": 1499,
+      "return_path": 0.3196915782544495,
+      "tfidf": 0.3062196781971107,
+      "transition": "W3->W4",
+      "vocab_size": 50000
+    },
+    {
+      "frozen_blend": 0.36578013842313367,
+      "k": 5,
+      "n_candidates_per_query": 1498,
+      "n_excluded": 118,
+      "n_queries": 1499,
+      "return_path": 0.33555740276305906,
+      "tfidf": 0.2981717766838722,
+      "transition": "W4->W5",
+      "vocab_size": 50000
+    },
+    {
+      "frozen_blend": 0.361154597764451,
+      "k": 5,
+      "n_candidates_per_query": 1512,
+      "n_excluded": 118,
+      "n_queries": 1513,
+      "return_path": 0.3228984317810934,
+      "tfidf": 0.29623730633378376,
+      "transition": "W5->W6",
+      "vocab_size": 50000
+    },
+    {
+      "frozen_blend": 0.37469926967306716,
+      "k": 5,
+      "n_candidates_per_query": 1511,
+      "n_excluded": 118,
+      "n_queries": 1512,
+      "return_path": 0.3287061376732197,
+      "tfidf": 0.3174238817610015,
+      "transition": "W6->W7",
+      "vocab_size": 50000
+    }
+  ],
+  "validations": {
+    "all_queries_valid": true,
+    "all_query_counts_match": true,
+    "depth_all_48_saved_comparator_scores_replay_exactly": true,
+    "primary_k5_all_18_method_transition_scores_replay_exactly": true,
+    "source_checksums_pass": true,
+    "ticker_all_12_saved_comparator_scores_replay_exactly": true
+  }
+}

@@ -6,3 +6,5 @@ data/
 data_local/
 models/
 results/
+experiments/multimodal_peer_encoder/artifacts/
+.pytest_cache/

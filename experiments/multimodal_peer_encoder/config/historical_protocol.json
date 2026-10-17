@@ -1,0 +1,357 @@
+{
+  "schema_version": "multimodal-peer-encoder-historical-protocol-v1",
+  "declared_date": "2026-08-02",
+  "status": "predeclared_historical_first",
+  "scope": {
+    "experiment": "multimodal_peer_encoder",
+    "manuscript_remains_frozen_during_experiment": true,
+    "honest_holdout_claim": "New-model parameters, hyperparameters, checkpoints, and reporting rules are frozen before the model's first W-target evaluation.",
+    "not_claimed": "The research team had never seen modern aggregate results when designing the architecture.",
+    "permitted_prior_modern_information": "The frozen 80/20 blend's existing aggregate and transition-level modern scores and audited universe counts, used only as evaluator reproduction assertions; no new-model modern score is permitted before the lock."
+  },
+  "metric": {
+    "name": "canonical positive-relevance NDCG@5",
+    "implementation": "scripts.metrics.ndcg_at_k",
+    "k": 5,
+    "relevance": "max(0, next-window Ledoit-Wolf residual correlation)",
+    "query_policy": "census of every eligible security",
+    "self_excluded": true,
+    "tie_handling": "canonical deterministic seeded jitter",
+    "query_aggregation": "macro mean within transition",
+    "transition_aggregation": "equal-weight arithmetic mean",
+    "comparison_precision": "unrounded"
+  },
+  "data": {
+    "historical_transitions": [
+      "H1->H2",
+      "H2->H3",
+      "H3->H4",
+      "H4->H5",
+      "H5->H6",
+      "H6->H7",
+      "H7->H8",
+      "H8->H9",
+      "H9->H10",
+      "H10->H11",
+      "H11->H12",
+      "H12->H13"
+    ],
+    "modern_transitions": [
+      "W1->W2",
+      "W2->W3",
+      "W3->W4",
+      "W4->W5",
+      "W5->W6",
+      "W6->W7"
+    ],
+    "feature_inputs": [
+      "feature-window factor-residual return path",
+      "feature-time vintage 10-K Item 1 Granite-r2 embedding"
+    ],
+    "text_embedding": {
+      "encoder": "Granite-r2",
+      "dimension": 768,
+      "token_cap": 512,
+      "historical_cache_build": "one content-deduplicated H1-H12 build from the locked local model tree before fitting",
+      "historical_inference_device": "cpu",
+      "source_parameter_dtype": "torch.bfloat16",
+      "inference_parameter_dtype": "torch.float32",
+      "cpu_dtype_policy": "CPU-only; explicitly call model.float() before encoding",
+      "selected_model_tree_sha256": "198d7df8b72a9fd77f9823e5e278f60df77c4577c08dd54e6df9888ade0c6d99",
+      "pinned_embedding_software": {
+        "numpy": "2.4.2",
+        "torch": "2.11.0",
+        "sentence-transformers": "5.3.0",
+        "transformers": "5.5.0"
+      },
+      "frozen": true,
+      "fine_tuning_allowed": false,
+      "cache_regeneration_allowed_after_results": false
+    }
+  },
+  "model": {
+    "class": "ResidualGatedMultimodalRetriever",
+    "module": "experiments.multimodal_peer_encoder.model",
+    "candidate_widths": [
+      32,
+      64
+    ],
+    "width_binding": {
+      "embedding_dim": "width",
+      "return_channels": "width"
+    },
+    "other_architecture_and_optimizer_settings": "fixed identically across widths before first fit",
+    "initial_return_gate": 0.8,
+    "initial_raw_return_skip": 0.8,
+    "objective": {
+      "name": "ListNet-style listwise softmax cross-entropy",
+      "implementation": "listwise_softmax_loss",
+      "score_temperature": 0.1,
+      "target_temperature": 0.1,
+      "query_reduction": "mean",
+      "transition_reduction": "one equal-frequency optimizer update per transition per epoch; arithmetic mean only for the epoch training trace",
+      "validation_used_for_gradients": false,
+      "validation_used_for_checkpoint_selection": false
+    },
+    "training": {
+      "epochs": 40,
+      "optimizer": "AdamW",
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "gradient_norm_clip": 1.0,
+      "dtype": "float32",
+      "reference_device": "cpu",
+      "torch_num_threads": 8,
+      "updates": "one optimizer update per transition; seed-determined transition order within each epoch",
+      "scheduler": null,
+      "dropout": 0.0,
+      "early_stopping": false,
+      "deterministic_algorithms": true
+    }
+  },
+  "historical_selection": {
+    "folds": [
+      {
+        "fold": 1,
+        "train_transition_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "validation_transition_indices": [
+          7,
+          8
+        ],
+        "train_transitions": [
+          "H1->H2",
+          "H2->H3",
+          "H3->H4",
+          "H4->H5",
+          "H5->H6",
+          "H6->H7"
+        ],
+        "validation_transitions": [
+          "H7->H8",
+          "H8->H9"
+        ]
+      },
+      {
+        "fold": 2,
+        "train_transition_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "validation_transition_indices": [
+          9,
+          10
+        ],
+        "train_transitions": [
+          "H1->H2",
+          "H2->H3",
+          "H3->H4",
+          "H4->H5",
+          "H5->H6",
+          "H6->H7",
+          "H7->H8",
+          "H8->H9"
+        ],
+        "validation_transitions": [
+          "H9->H10",
+          "H10->H11"
+        ]
+      },
+      {
+        "fold": 3,
+        "train_transition_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "validation_transition_indices": [
+          11,
+          12
+        ],
+        "train_transitions": [
+          "H1->H2",
+          "H2->H3",
+          "H3->H4",
+          "H4->H5",
+          "H5->H6",
+          "H6->H7",
+          "H7->H8",
+          "H8->H9",
+          "H9->H10",
+          "H10->H11"
+        ],
+        "validation_transitions": [
+          "H11->H12",
+          "H12->H13"
+        ]
+      }
+    ],
+    "selection_seeds": [
+      11,
+      29,
+      47
+    ],
+    "seed_aggregation": "arithmetic mean within each validation transition",
+    "validation_slot_definition": "one validation transition after averaging its three seed-specific NDCG@5 values",
+    "n_validation_slots": 6,
+    "baseline": {
+      "name": "frozen 80/20 return-path plus TF-IDF percentile-rank blend",
+      "return_path_weight": 0.8,
+      "tfidf_weight": 0.2,
+      "authority": "results/acceptance_robustness/run_20260730T032543Z/02_blend_historical_tuning_modern_frozen.json"
+    },
+    "width_selection": {
+      "criterion": "largest equal-slot mean NDCG@5 advantage over the frozen blend",
+      "exact_tie_break": "smaller width",
+      "fallback_to_unselected_width_if_gate_fails": false
+    },
+    "continuation_gate": {
+      "all_conditions_required": true,
+      "minimum_mean_validation_advantage": 0.005,
+      "minimum_validation_slot_wins": 4,
+      "total_validation_slots": 6,
+      "win_definition": "strictly positive unrounded model-minus-baseline slot difference",
+      "tie_counts_as_win": false
+    }
+  },
+  "final_historical_fit": {
+    "condition": "historical continuation gate passes",
+    "train_transition_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "seeds": [
+      101,
+      211,
+      307,
+      401,
+      503
+    ],
+    "required_completed_seed_count": 5,
+    "seed_selection_allowed": false,
+    "modern_transition_score": "arithmetic mean of five separately evaluated seed scores",
+    "post_hoc_score_ensemble": false
+  },
+  "modern_target_lock": {
+    "required_before_modern_target_access": true,
+    "lock_manifest_minimum_contents": [
+      "protocol and configuration hashes",
+      "source and evaluator hashes",
+      "data contract and historical input identities",
+      "production-only execution attestation with identical pre-fit, post-selection, and post-final snapshots",
+      "exact aligned ticker, return, text-embedding, text, and historical target identities",
+      "frozen Granite cache identity",
+      "selected width and complete training settings",
+      "five final checkpoint hashes",
+      "historical slot results and gate decision"
+    ],
+    "evaluator_must_verify_lock_before_target_loader_import": true,
+    "one_shot_marker_before_any_modern_data_access": true,
+    "transition_access_order": "verify/load feature inputs; freeze all peer lists; hash target files into the existing marker; load target content",
+    "forbidden_prelock_paths": [
+      "results/windows_v3/W*/corr_target.npy"
+    ],
+    "forbidden_prelock_operations": [
+      "open modern target files",
+      "hash modern target files",
+      "probe modern target metadata",
+      "score the new model against a W target"
+    ],
+    "forbidden_prelock_eager_helpers": [
+      "core.build_transition",
+      "core.load_window",
+      "check_data_contract",
+      "collect_input_provenance"
+    ],
+    "feature_only_loader_required": true
+  },
+  "modern_evaluation": {
+    "attempts_allowed_under_this_protocol": 1,
+    "tuning_allowed": false,
+    "baseline": {
+      "name": "frozen 80/20 return-path plus TF-IDF percentile-rank blend",
+      "macro_ndcg_at_5_unrounded": 0.3729682197528556,
+      "macro_ndcg_at_5_display": 0.373,
+      "authority": "results/acceptance_robustness/run_20260730T032543Z/02_blend_historical_tuning_modern_frozen.json"
+    },
+    "paper_inclusion_gate": {
+      "all_conditions_required": true,
+      "minimum_mean_advantage_over_baseline": 0.01,
+      "minimum_transition_wins": 5,
+      "total_transitions": 6,
+      "win_definition": "five-seed mean model NDCG@5 strictly exceeds the same-transition frozen blend NDCG@5",
+      "strict_application_result_must_survive": true,
+      "strict_application_survival_definition": "Rankings freeze on the feature-time-only universe before target availability; incomplete query-list pairs are dropped without reranking; there is no target-dependent selection; and the equal-transition mean model-minus-blend difference in query-basket residual correlation remains positive.",
+      "gate_interpretability_required": true,
+      "no_modern_tuning_required": true
+    },
+    "gate_interpretability": {
+      "return_gate_range": [
+        0.0,
+        1.0
+      ],
+      "raw_skip_range": [
+        0.0,
+        1.0
+      ],
+      "required_per_transition_per_seed_return_gate_statistics": [
+        "mean",
+        "standard_deviation",
+        "p10",
+        "p50",
+        "p90",
+        "fraction_below_0.05",
+        "fraction_above_0.95"
+      ],
+      "global_raw_skip_weight_required": true,
+      "required_no_retraining_score_ablations": [
+        "full_model",
+        "learned_fusion_only_raw_skip_disabled",
+        "raw_return_skip_only"
+      ],
+      "finite_values_required": true,
+      "diagnostics_are_not_selection_rules": true
+    }
+  },
+  "failure_policy": {
+    "historical_gate_failure": "Stop before modern target access; archive the historical negative result; leave the manuscript unchanged; do not try a rescue configuration.",
+    "modern_gate_failure": "Archive the complete result; do not add the model to the paper's main claims; do not tune or rerun on W1->W7.",
+    "prelock_modern_target_access": "Invalidate confirmatory status and stop paper inclusion under this protocol.",
+    "missing_candidate_fold_or_seed": "Stop; do not reduce the denominator or select only completed runs.",
+    "injected_execution_seam": "Test-only; it may create only a TEST_ONLY manifest and is never eligible for modern evaluation.",
+    "execution_snapshot_change": "Stop without a production lock if any source, input file, or aligned array identity changes during selection or final fitting.",
+    "hardware_interruption": "Rerun only the identical seed with identical code, inputs, and configuration.",
+    "mechanical_failure_before_target_output_is_inspected": "A logged correction and identical-protocol rerun are allowed.",
+    "material_change_after_modern_output_is_inspected": "Invalidate the paper inclusion gate.",
+    "work_after_stop": "Treat as exploratory; require a new protocol and a genuinely later evaluation period."
+  }
+}

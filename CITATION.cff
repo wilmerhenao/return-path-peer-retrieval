@@ -16,10 +16,12 @@ abstract: >-
   for Behavioral Equity-Peer Retrieval, accepted at ICAIF 2026. This source
   release includes return-window construction, Fama-French five-factor
   residualization, a positive-correlation NDCG metric, vintage Item 1
-  extraction, historical TF-IDF and rank-blend selection, selected
-  diagnostics, and tests. It excludes market data, filing corpora, model
-  weights, embedding caches, saved results, and some reported analysis
-  runners. The README describes the included code and missing dependencies.
+  extraction, historical TF-IDF and rank-blend selection, frozen-blend
+  robustness checks, gradient boosting, the historical CNN diagnostic,
+  selected aggregate results, and tests. It excludes market data, filing
+  corpora, model weights, embedding caches, full execution archives, and
+  some reported analysis runners. The README describes the included code
+  and missing dependencies.
 license: "Apache-2.0"
 keywords:
   - "equity peer retrieval"
