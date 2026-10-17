@@ -58,7 +58,7 @@ The repository contains source code, tests, selected aggregate results, and the 
 
 Several reported analyses still have no original runner here: full-excerpt Granite encoding, the fixed-list application audit, target-date resampling, the original standalone 19-transition census, and matched-history text fusion and its weight selection. The new 19-transition blend runner reuses saved historical/modern aggregates and computes the missing bridge; it does not regenerate the standalone census. The included return-history comparison evaluates return paths alone. The public CNN runner ends at its historical continuation decision; no modern continuation or later CNN variants are included.
 
-These additions extend the current repository. The cited **v1.0.0 Zenodo archive remains the original source-only snapshot**; it does not contain the new runners or result extracts.
+Version **v1.1.0** packages these additions; its Zenodo DOI will be linked after archival verification. The **v1.0.0 Zenodo archive remains the original source-only snapshot**; it does not contain the new runners or result extracts.
 
 ## Installation
 
